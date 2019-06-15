@@ -3,8 +3,9 @@ pragma solidity >=0.4.21 <0.6.0;
 contract OMarket {
 
 	address public owner;
-	mapping(uint16 => address) admins;
-	uint16 adminCount = 0;
+	address[] admins;
+
+	event AdminAdded(address adminAddress);
 
 	modifier onlyOwner() {
 		require(msg.sender == owner, "Only owner can do this action");
@@ -18,7 +19,8 @@ contract OMarket {
 		public
 		onlyOwner()
 	{
-		admins[adminCount++] = adminAddress;
+		admins.push(adminAddress);
+		emit AdminAdded(adminAddress);
 	}
 
 	function getAdmins()
@@ -27,10 +29,6 @@ contract OMarket {
 		onlyOwner()
 		returns(address[] memory)
 	{
-		address[] memory ret = new address[](adminCount);
-		for (uint16 i = 0; i < adminCount; i++) {
-			ret[i] = admins[i];
-		}
-		return ret;
+		return admins;
 	}
 }
