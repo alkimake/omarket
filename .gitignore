@@ -59,3 +59,14 @@ typings/
 
 # next.js build output
 .next
+
+# Directories used by tools like mocha & istanbul
+coverage
+shippable
+
+# Generated files
+config/development/contracts.json
+config/development/*.sol.js
+config/test/contracts.json
+build
+dist
