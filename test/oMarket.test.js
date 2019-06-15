@@ -34,5 +34,11 @@ contract('OMarket', function (accounts) {
         assert.equal(eventData.adminAddress, adminAccount, "added admin address should match");
       });
     });
+    it("getAdmins should include addmin address", async() => {
+      await instance.addAdmin(adminAccount, { from: deployAccount});
+      const admins = await instance.getAdmins({from: deployAccount});
+      assert.equal(admins.length, 1);
+      assert.equal(admins[0], adminAccount);
+    });
   });
 })
