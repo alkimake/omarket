@@ -1,23 +1,14 @@
 pragma solidity >=0.4.21 <0.6.0;
 
-contract OMarket {
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
-	address public owner;
+contract OMarket is Ownable {
 	address[] admins;
-
 	event AdminAdded(address adminAddress);
-
-	modifier onlyOwner() {
-		require(msg.sender == owner, "Only owner can do this action");
-		_;
-	}
-	constructor() public {
-		owner = msg.sender;
-	}
 
 	function addAdmin(address adminAddress)
 		public
-		onlyOwner()
+		onlyOwner
 	{
 		admins.push(adminAddress);
 		emit AdminAdded(adminAddress);
@@ -26,7 +17,7 @@ contract OMarket {
 	function getAdmins()
 		public
 		view
-		onlyOwner()
+		onlyOwner
 		returns(address[] memory)
 	{
 		return admins;
