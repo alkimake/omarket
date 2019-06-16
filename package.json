@@ -3,15 +3,24 @@
   "version": "0.0.1",
   "description": "Open Market for Dapp",
   "directories": {
-    "test": "truffle test"
+    "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3"
+  },
   "devDependencies": {
+    "@vue/component-compiler-utils": "^3.0.0",
     "openzeppelin-solidity": "^2.3.0",
-    "truffle-hdwallet-provider": "^1.0.10"
+    "parcel-bundler": "^1.12.3",
+    "truffle-hdwallet-provider": "^1.0.10",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:sol": "truffle test",
+    "dev": "parcel index.html",
+    "watch": "parcel watch index.html",
+    "production": "parcel build index.html"
   },
   "repository": {
     "type": "git",
