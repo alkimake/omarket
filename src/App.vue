@@ -1,25 +1,51 @@
 
 <template>
-  <div class="container">
-    <h1>{{ message }}</h1>
+  <div id="app">
+    <router-view
+      :is-d-app-ready="isDAppReady"
+      :current-view="currentView"
+    />
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  data() {
-    return {
-      message: 'Using Parcel In A Vue.js App',
-    };
+  props: {
+    isDAppReady: {
+      type: Boolean,
+      default: false
+    },
+    currentView: {
+      type: Object,
+      default: null
+    }
   },
 };
 </script>
 
 <style scoped>
-  .container {
-    width: 600px;
-    margin: 50px auto;
-    text-align: center;
+  html {
+    background: #eef0ef;
+  }
+  body {
+    margin: 0;
+    width: 100%;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  textarea {
+    resize: none;
+  }
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+    width: 100%;
+    /*max-width: 960px;*/
+    min-width: 1020px;
+    margin: auto;
   }
 </style>
