@@ -1,13 +1,32 @@
 
 <template>
-  <div id="hhh">
-    <router-view />
+  <div id="content">
+    <NavBar></NavBar>
+    <el-row :gutter="20">
+      <el-col :span="18">
+        <router-view></router-view>
+      </el-col>
+      <el-col :span="6">
+        <Web3></Web3>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import NavBar from './components/NavBar';
+import Web3 from './components/Web3'
 export default {
   name: 'App',
+  components: {
+    NavBar,
+    Web3
+  },
+  data() {
+    return {
+      visible: true
+    }
+  }
 };
 </script>
 

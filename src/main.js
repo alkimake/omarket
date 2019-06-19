@@ -1,10 +1,14 @@
 import Vue from 'vue'
 import App from './App'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import getWeb3 from './util/web3/getWeb3'
 
 Vue.config.devtools = true
 Vue.config.productionTip = false
+
+Vue.use(ElementUI);
 
 const connectToNetwork = async () => {
   const web3 = await getWeb3();
