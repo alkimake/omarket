@@ -9,6 +9,12 @@
     <el-menu-item index="1">
       Store
     </el-menu-item>
+    <el-menu-item index="2">
+      Store Owner
+    </el-menu-item>
+    <el-menu-item index="3">
+      Admin
+    </el-menu-item>
   </el-menu>
 </template>
 
