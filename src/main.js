@@ -3,6 +3,8 @@ import App from './App'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
+
+import OMarketContract from "./contracts/OMarket.json";
 import getWeb3 from './util/web3/getWeb3'
 
 Vue.config.devtools = true
@@ -20,7 +22,13 @@ const connectToNetwork = async () => {
   const coinbase = await web3.eth.getCoinbase();
   const hasInjectedWeb3 = await web3.eth.net.isListening();
 
-  return { web3, accounts, networkId, coinbase, hasInjectedWeb3 };
+  const deployedNetwork = OMarketContract.networks[networkId];
+  const instance = new web3.eth.Contract(
+    OMarketContract.abi,
+    deployedNetwork && deployedNetwork.address,
+  );
+
+  return { web3, accounts, networkId, coinbase, hasInjectedWeb3, instance };
 }
 
 new Vue({
@@ -65,6 +73,9 @@ new Vue({
       this.web3.coinbase = web3.coinbase;
       this.web3.isInjected = web3.hasInjectedWeb3;
       this.web3.networkId = web3.networkId;
+      this.web3.instance = web3.instance;
+      // const response = await web3.instance.methods.owner().call({from: web3.coinbase });
+      // console.log('response is', response);
     } catch (error) {
       this.web3.error = error;
       console.error(error, 'Unable to register web3 instance')
