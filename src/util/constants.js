@@ -10,13 +10,3 @@ export const NETWORKS = {
 }
 
 export const APPROVED_NETWORK_ID = '5777'
-
-export const MUTATION_TYPES = {
-  CHANGE_CURRENT_ROUTE_TO: 'changeCurrentRouteTo',
-  REGISTER_WEB3_INSTANCE: 'registerWeb3Instance',
-  UPDATE_WEB3_PROPERTIES: 'updateWeb3Properties',
-  SET_CURRENT_VIEW: 'setCurrentView',
-  UPDATE_DAPP_READINESS: 'updateDAppReadiness',
-}
-
-export const ACTION_TYPES = MUTATION_TYPES

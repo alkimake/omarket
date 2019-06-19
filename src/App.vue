@@ -1,26 +1,13 @@
 
 <template>
-  <div id="app">
-    <router-view
-      :is-d-app-ready="isDAppReady"
-      :current-view="currentView"
-    />
+  <div id="hhh">
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  props: {
-    isDAppReady: {
-      type: Boolean,
-      default: false
-    },
-    currentView: {
-      type: Object,
-      default: null
-    }
-  },
 };
 </script>
 

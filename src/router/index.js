@@ -1,18 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../components/Home'
-import Web3Message from '../components/sections/Web3Message.vue'
+import Home from '../components/Home.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      mode: 'history',
       path: '/',
-      name: 'Root',
+      name: 'Home',
       component: Home,
-      meta: { view: Web3Message }
     }
   ]
 })

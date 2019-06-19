@@ -1,75 +1,70 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import App from './App'
-import store from './store'
 import router from './router'
-
-import { mapState, mapActions } from 'vuex'
-import { ACTION_TYPES } from './util/constants'
+import getWeb3 from './util/web3/getWeb3'
 
 Vue.config.devtools = true
 Vue.config.productionTip = false
 
-Vue.use(Vuex);
+const connectToNetwork = async () => {
+  const web3 = await getWeb3();
+
+  // Use web3 to get the user's accounts.
+  const accounts = await web3.eth.getAccounts();
+  const networkId = await web3.eth.net.getId();
+
+  const coinbase = await web3.eth.getCoinbase();
+  const hasInjectedWeb3 = await web3.eth.net.isListening();
+
+  return { web3, accounts, networkId, coinbase, hasInjectedWeb3 };
+}
 
 new Vue({
   el: '#app',
-  store,
   router,
   components: { App },
-  computed: {
-    ...mapState({
-      hasInjectedWeb3: state => state.web3.isInjected,
-      hasWeb3InjectedBrowser: state => state.user.hasWeb3InjectedBrowser,
-      hasCoinbase: state => state.user.hasCoinbase,
-      networkId: state => state.web3.networkId,
-      coinbase: state => state.web3.coinbase,
-      currentRoute: state => state.currentRoute,
-      currentView: state => state.currentView,
-      isDAppReady: state => state.isDAppReady,
-      defaultRoute: state => state.defaultRoute
-    })
+  data() {
+    return {
+      web3: {
+        handle: null,
+        accounts: [],
+        coinbase: null,
+        error: null,
+        instance: null,
+        isInjected: false,
+        networkId: null
+      }
+    };
   },
   watch: {
-    hasInjectedWeb3 (web3ConnectionValue) {
+    'web3.hasInjectedWeb3': (web3ConnectionValue) => {
       console.log('hasInjectedWeb3: ', web3ConnectionValue)
     },
-    networkId (networkId) {
+    'web3.networkId': (networkId) => {
       console.log('networkId: ', networkId)
     },
-    coinbase (coinbase) {
+    'web3.coinbase': (coinbase) => {
       console.log('coinbase: ', coinbase)
     },
-    isDAppReady (isDAppReady) {
+    isDAppReady: (isDAppReady) => {
       console.log('isDAppReady: ', isDAppReady)
     },
-    accounts (accounts) {
+    'web3.accounts': (accounts) => {
       console.log('accounts: ', accounts)
     },
-    $route (newRoute) {
-      this[ACTION_TYPES.CHANGE_CURRENT_ROUTE_TO](newRoute)
-      this[ACTION_TYPES.SET_CURRENT_VIEW](newRoute)
-    }
   },
   beforeCreate: async function () {
     try {
-      await this.$store.dispatch(ACTION_TYPES.REGISTER_WEB3_INSTANCE);
+      const web3 = await connectToNetwork();
+      this.web3.handle = web3.web3;
+      this.web3.accounts = web3.accounts;
+      this.web3.coinbase = web3.coinbase;
+      this.web3.isInjected = web3.hasInjectedWeb3;
+      this.web3.networkId = web3.networkId;
     } catch (error) {
-      if (!(this.isDAppReady)) {
-        this.$store.dispatch(ACTION_TYPES.UPDATE_DAPP_READINESS, true)
-      }
-      console.error(this.$store.state.web3.error, 'Unable to REGISTER_WEB3_INSTANCE')
+      this.web3.error = error;
+      console.error(error, 'Unable to register web3 instance')
     }
   },
-  created: function () {
-    this[ACTION_TYPES.CHANGE_CURRENT_ROUTE_TO](this.$route)
-    this[ACTION_TYPES.SET_CURRENT_VIEW](this.$route)
-  },
-  methods: {
-    ...mapActions([
-      ACTION_TYPES.CHANGE_CURRENT_ROUTE_TO,
-      ACTION_TYPES.SET_CURRENT_VIEW,
-    ]),
-  },
-  template: '<App  :is-d-app-ready="isDAppReady" :current-view="currentView"/>',
+  template: '<App/>',
 })
