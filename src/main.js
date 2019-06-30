@@ -48,6 +48,11 @@ new Vue({
       }
     };
   },
+  computed: {
+    oMarket: function () {
+      return (this.web3 && this.web3.instance) ? this.web3.instance.methods : null;
+    }
+  },
   watch: {
     'web3.hasInjectedWeb3': (web3ConnectionValue) => {
       console.log('hasInjectedWeb3: ', web3ConnectionValue)
@@ -74,11 +79,22 @@ new Vue({
       this.web3.isInjected = web3.hasInjectedWeb3;
       this.web3.networkId = web3.networkId;
       this.web3.instance = web3.instance;
-      // const response = await web3.instance.methods.owner().call({from: web3.coinbase });
+      // const response = await web3.instance.methods.getAdmins().call();
       // console.log('response is', response);
+      await this.getUserBasics();
     } catch (error) {
       this.web3.error = error;
       console.error(error, 'Unable to register web3 instance')
+    }
+  },
+  methods: {
+    getUserBasics: async function() {
+      try {
+        const isAdmin = await this.oMarket.isAdmin().call({from: web3.coinbase});
+        console.log(isAdmin);
+      } catch(error) {
+        console.error(error);
+      }
     }
   },
   template: '<App/>',
