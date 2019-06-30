@@ -84,7 +84,7 @@ export default {
 
 <style scoped>
   .metamask-resource {
-    background: url('/static/images/metamask.png') no-repeat;
+    background: url('../static/images/metamask.png') no-repeat;
     background-size: contain;
     height: 200px;
     width: auto;
