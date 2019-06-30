@@ -45,7 +45,8 @@ new Vue({
         instance: null,
         isInjected: false,
         networkId: null
-      }
+      },
+      user: {},
     };
   },
   computed: {
@@ -69,6 +70,9 @@ new Vue({
     'web3.accounts': (accounts) => {
       console.log('accounts: ', accounts)
     },
+    'user': (user) => {
+      console.log('user', user);
+    }
   },
   beforeCreate: async function () {
     try {
@@ -80,7 +84,7 @@ new Vue({
       this.web3.networkId = web3.networkId;
       this.web3.instance = web3.instance;
       // const response = await web3.instance.methods.getAdmins().call();
-      // console.log('response is', response);
+      // console.log('response is', response)
       await this.getUserBasics();
     } catch (error) {
       this.web3.error = error;
@@ -90,8 +94,10 @@ new Vue({
   methods: {
     getUserBasics: async function() {
       try {
-        const isAdmin = await this.oMarket.isAdmin().call({from: web3.coinbase});
-        console.log(isAdmin);
+        const owner = await this.oMarket.owner().call();
+        const isOwner = owner === this.web3.accounts[0];
+        const isAdmin = await this.oMarket.isAdmin().call();
+        this.user = { isOwner, isAdmin };
       } catch(error) {
         console.error(error);
       }
