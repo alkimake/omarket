@@ -1,6 +1,5 @@
 <template>
   <el-menu
-    theme="dark"
     :default-active="activeIndex"
     class="el-menu-demo"
     mode="horizontal"
@@ -36,10 +35,12 @@ export default {
       activeIndex: '0'
     };
   },
+  mounted() {
+    this.activeIndex = this.$router.options.routes.findIndex(r => r.path === this.$router.currentRoute.path).toString();
+  },
   methods: {
     handleSelect(key, keyPath) {
       this.activeIndex = key;
-      console.log(keyPath);
       this.$router.push(this.$router.options.routes[key].path)
       // console.log(this.$router.options.routes);
     }
