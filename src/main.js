@@ -47,6 +47,7 @@ new Vue({
         networkId: null
       },
       user: {},
+      subscribedEvents: {},
     };
   },
   computed: {
@@ -83,8 +84,8 @@ new Vue({
       this.web3.isInjected = web3.hasInjectedWeb3;
       this.web3.networkId = web3.networkId;
       this.web3.instance = web3.instance;
-      // const response = await web3.instance.methods.getAdmins().call();
-      // console.log('response is', response)
+      // this.subscribeLogEvent(OMarketContract, 'AdminAdded')
+      // this.subscribeLogEvent(OMarketContract, 'AdminRemoved')
       await this.getUserBasics();
     } catch (error) {
       this.web3.error = error;
