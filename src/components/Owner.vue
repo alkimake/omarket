@@ -13,6 +13,7 @@
       <el-form-item>
         <el-button
           type="primary"
+          icon="el-icon-circle-plus-outline"
           @click="onSubmit"
         >
           Add Admin
@@ -40,9 +41,10 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            icon="el-icon-remove-outline"
+            @click="removeAdmin(scope.$index, scope.row)"
           >
-            Delete
+            Remove
           </el-button>
         </template>
       </el-table-column>
@@ -66,7 +68,7 @@ export default {
     async refreshList() {
       this.adminList = await this.$root.contractCall('getAdmins');
     },
-    async handleDelete(index, address) {
+    async removeAdmin(index, address) {
       await this.$root.contractSend('removeAdmin', address);
       this.refreshList();
     },
