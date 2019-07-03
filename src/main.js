@@ -12,6 +12,7 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 
+
 const connectToNetwork = async () => {
   const web3 = await getWeb3();
 
@@ -70,9 +71,6 @@ new Vue({
     },
     'web3.accounts': (accounts) => {
       console.log('accounts: ', accounts)
-    },
-    'user': (user) => {
-      console.log('user', user);
     }
   },
   beforeCreate: async function () {
@@ -93,6 +91,30 @@ new Vue({
     }
   },
   methods: {
+    contractSend: async function(method, ...args) {
+      //FIXME: Wait calling methods until web3 is ready
+      try {
+        console.log(`args ${args} sending to ${method}`);
+        const result = await this.oMarket[method](...args).send({from: this.web3.coinbase});
+        console.log(`method send: "${method}" returned ${result}`);
+        return result;
+      } catch(err) {
+        // console.error("Error occured on transaction", err);
+        return null;
+      }
+    },
+    contractCall: async function(method, ...args) {
+      //FIXME: Wait calling methods until web3 is ready
+      try {
+        console.log(`${method} is calling with args ${args}`);
+        const result = await this.oMarket[method](...args).call();
+        console.log(`method: "${method}" returned ${result}`);
+        return result;
+      } catch(err) {
+        // console.error("Error occured on transaction", err);
+        return null;
+      }
+    },
     getUserBasics: async function() {
       try {
         const owner = await this.oMarket.owner().call();
