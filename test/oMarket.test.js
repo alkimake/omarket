@@ -21,6 +21,15 @@ contract('OMarket', function (accounts) {
       assert.equal(owner, deployAccount, "the deploying address should be the owner")
     })
 
+    it("PAUSED shoud be set to false", async () => {
+      const paused = await instance.paused({ from: deployAccount });
+      assert.equal(paused, false, "state should be unpaused");
+    });
+
+    it("pause can not be called other than owner", async () => {
+      await catchRevert(instance.pause({ from: adminAccount }));
+    });
+
   })
 
   describe("Admin", async () => {
@@ -38,6 +47,10 @@ contract('OMarket', function (accounts) {
         assert.equal(eventData.adminAddress, adminAccount, "added admin address should match");
       });
 
+      it("should revert when contract is in paused state", async () => {
+        await instance.pause();
+        await catchRevert(instance.addAdmin(adminAccount, { from: deployAccount }));
+      });
     });
 
     it("getAdmins should include addmin address", async() => {
@@ -106,6 +119,11 @@ contract('OMarket', function (accounts) {
           const tx = await instance.addStoreOwner(sellerAccount, 'Seller', { from: adminAccount });
           const eventData = tx.logs[0].args;
           assert.equal(eventData.storeOwnerAddress, sellerAccount, "added storeOwner address should match");
+        });
+
+        it("should not add store owners when contract is paused", async () => {
+          await instance.pause({ from: deployAccount });
+          await catchRevert(instance.addStoreOwner(sellerAccount, 'Seller', { from: adminAccount }));
         });
 
       });

@@ -8,6 +8,7 @@ contract Store is Ownable {
 
 	string[] public labels;
 	string public name;
+
 	constructor (address storeOwner, string memory _name, string memory _labelsSeperatedByCommas)
 		public
 	{
@@ -21,4 +22,6 @@ contract Store is Ownable {
 		labels = labels_;
 		transferOwnership(storeOwner);
 	}
+
+
 }
