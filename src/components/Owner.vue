@@ -14,7 +14,7 @@
         <el-button
           type="primary"
           icon="el-icon-circle-plus-outline"
-          @click="onSubmit"
+          @click="addAdmin"
         >
           Add Admin
         </el-button>
@@ -72,7 +72,7 @@ export default {
       await this.$root.contractSend('removeAdmin', address);
       this.refreshList();
     },
-    async onSubmit() {
+    async addAdmin() {
       //TODO: Validate address
       await this.$root.contractSend('addAdmin', this.adminForm.address);
       this.refreshList();
