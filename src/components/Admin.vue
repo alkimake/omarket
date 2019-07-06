@@ -33,7 +33,21 @@
       >
         <template slot-scope="scope">
           <i class="el-icon-star-on"></i>
-          <span style="margin-left: 10px">{{ scope.row }}</span>
+          <span style="margin-left: 10px">{{ scope.row.addr }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Name"
+      >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Active"
+      >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.isActive }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -55,7 +69,12 @@ export default {
   },
   methods: {
     async refreshList() {
-      this.storeOwnerList = await this.$root.contractCall('getStoreOwners');
+      const list = await this.$root.contractCall('getStoreOwners');
+      this.storeOwnerList = await Promise.all(list.map(async addr => {
+        const result = await this.$root.contractCall('readStoreOwner', addr);
+        const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
+        return owner;
+      }));
     },
     async addStoreOwner() {
       //TODO: Validate address
