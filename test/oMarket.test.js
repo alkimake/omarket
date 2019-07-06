@@ -74,5 +74,27 @@ contract('OMarket', function (accounts) {
 
       });
     });
+    describe("StoreOwner", async () => {
+      beforeEach(async () => {
+        await instance.addAdmin(adminAccount, { from: deployAccount });
+      });
+      describe("addStoreOwner()", async () => {
+        it("only the admin should be able to add a store owner", async () => {
+          await instance.addStoreOwner(sellerAccount, {from: adminAccount});
+          await catchRevert(instance.addStoreOwner(sellerAccount, { from: deployAccount }));
+        });
+        it("adding an storeOwner should triggger an event", async () => {
+          const tx = await instance.addStoreOwner(sellerAccount, { from: adminAccount });
+          const eventData = tx.logs[0].args;
+          assert.equal(eventData.storeOwnerAddress, sellerAccount, "added storeOwner address should match");
+        });
+      });
+      it("getStoreOwners should include store owner address", async() => {
+        await instance.addStoreOwner(sellerAccount, {from: adminAccount});
+        const sellers = await instance.getStoreOwners({from: adminAccount});
+        assert.equal(sellers.length, 1);
+        assert.equal(sellers[0], sellerAccount);
+      });
+    });
   });
 })

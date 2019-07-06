@@ -4,8 +4,16 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract OMarket is Ownable {
   address[] admins;
+  address[] storeOwners;
   event AdminAdded(address adminAddress);
   event AdminRemoved(address adminAddress);
+  event StoreOwnerAdded(address storeOwnerAddress);
+  event StoreOwnerRemoved(address storeOwnerAddress);
+
+  modifier onlyAdmin() {
+    require(isAdmin(msg.sender), 'Can not verify admin');
+    _;
+  }
 
   function addAdmin(address adminAddress)
     public
@@ -65,5 +73,22 @@ contract OMarket is Ownable {
     returns(address[] memory)
   {
     return admins;
+  }
+
+  function addStoreOwner(address storeOwnerAddress)
+    public
+    onlyAdmin
+  {
+    storeOwners.push(storeOwnerAddress);
+    emit StoreOwnerAdded(storeOwnerAddress);
+  }
+
+  function getStoreOwners()
+    public
+    view
+    onlyAdmin
+    returns(address[] memory)
+  {
+    return storeOwners;
   }
 }
