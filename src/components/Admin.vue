@@ -4,11 +4,13 @@
       :inline="true"
       :model="storeOwnerForm"
     >
-      <el-form-item label="StoreOwner address">
+      <el-form-item label="StoreOwner Address">
         <el-input
           v-model="storeOwnerForm.address"
           placeholder="StoreOwner address"
         ></el-input>
+      </el-form-item>
+      <el-form-item label="StoreOwner Name">
         <el-input
           v-model="storeOwnerForm.name"
           placeholder="StoreOwner name"
