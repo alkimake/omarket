@@ -4,15 +4,26 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract OMarket is Ownable {
   address[] admins;
-  address[] storeOwners;
+  mapping(address => StoreOwner) storeOwners;
+  address[] storeOwnersLUT;
+  uint STORE_CAP = 5;
+
   event AdminAdded(address adminAddress);
   event AdminRemoved(address adminAddress);
   event StoreOwnerAdded(address storeOwnerAddress);
   event StoreOwnerRemoved(address storeOwnerAddress);
+  event LogStoreOwner(address, string, bool);
 
   modifier onlyAdmin() {
     require(isAdmin(msg.sender), 'Can not verify admin');
     _;
+  }
+
+  struct StoreOwner {
+    address addr;
+    string name;
+    uint storeCap;
+    bool isActive;
   }
 
   function addAdmin(address adminAddress)
@@ -75,11 +86,36 @@ contract OMarket is Ownable {
     return admins;
   }
 
-  function addStoreOwner(address storeOwnerAddress)
+  function isStoreOwner(address storeOwnerAddress)
+    private
+    view
+    returns(bool)
+  {
+    uint listLength = storeOwnersLUT.length;
+    for (uint i = 0; i < listLength; i++) {
+      if (storeOwnersLUT[i] == storeOwnerAddress) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function isStoreOwner()
+    public
+    view
+    returns(bool)
+  {
+    return isStoreOwner(msg.sender);
+  }
+
+
+  function addStoreOwner(address storeOwnerAddress, string memory name)
     public
     onlyAdmin
   {
-    storeOwners.push(storeOwnerAddress);
+    require(!isStoreOwner(storeOwnerAddress), 'This account is already a store owner');
+    storeOwnersLUT.push(storeOwnerAddress);
+    storeOwners[storeOwnerAddress] = StoreOwner(storeOwnerAddress, name, STORE_CAP, true);
     emit StoreOwnerAdded(storeOwnerAddress);
   }
 
@@ -89,6 +125,22 @@ contract OMarket is Ownable {
     onlyAdmin
     returns(address[] memory)
   {
-    return storeOwners;
+    return storeOwnersLUT;
   }
+
+  function readStoreOwner(address storeOwnerAddress)
+    public
+    view
+    onlyAdmin
+    returns(address, string memory, bool)
+  {
+    // return storeOwners[storeOwnerAddress];
+    StoreOwner memory seller = storeOwners[storeOwnerAddress];
+    address addr = seller.addr;
+    string memory name = seller.name;
+    bool isActive = seller.isActive;
+    return (addr, name, isActive);
+  }
+
+  //TODO: implement removal of store owner
 }

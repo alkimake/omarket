@@ -20,26 +20,33 @@ contract('OMarket', function (accounts) {
       const owner = await instance.owner();
       assert.equal(owner, deployAccount, "the deploying address should be the owner")
     })
+
   })
 
   describe("Admin", async () => {
+
     describe("addAdmin()", async () => {
+
       it("only the owner should be able to add an admin", async () => {
         await instance.addAdmin(adminAccount, { from: deployAccount });
         await catchRevert(instance.addAdmin(adminAccount, { from: adminAccount }));
       });
+
       it("adding an admin should triggger an event", async () => {
         const tx = await instance.addAdmin(adminAccount, { from: deployAccount });
         const eventData = tx.logs[0].args;
         assert.equal(eventData.adminAddress, adminAccount, "added admin address should match");
       });
+
     });
+
     it("getAdmins should include addmin address", async() => {
       await instance.addAdmin(adminAccount, { from: deployAccount});
       const admins = await instance.getAdmins({from: deployAccount});
       assert.equal(admins.length, 1);
       assert.equal(admins[0], adminAccount);
     });
+
     it("user should get if user is admin", async() => {
       const ownerIsAdmin = await instance.isAdmin({from: deployAccount});
       assert.equal(ownerIsAdmin, false);
@@ -47,20 +54,26 @@ contract('OMarket', function (accounts) {
       const adminIsAdmin = await instance.isAdmin({from: adminAccount});
       assert.equal(adminIsAdmin, true);
     });
+
     describe("removeAdmin()", async () => {
+
+      beforeEach(async () => {
+        await instance.addAdmin(adminAccount, {from: deployAccount});
+      });
+
       it("should not remove admin if the address is not in admin list", async() => {
         await catchRevert(instance.removeAdmin(adminAccount, { from: adminAccount }))
       });
+
       it("should remove admin properly", async() => {
-        await instance.addAdmin(adminAccount, {from: deployAccount});
         const tx = await instance.removeAdmin(adminAccount, {from: deployAccount});
         const eventData = tx.logs[0].args;
         assert.equal(eventData.adminAddress, adminAccount, "removed admin adresss should match");
         const adminList = await instance.getAdmins({from: deployAccount});
         assert.equal(adminList.length, 0, "Admin list should be empty when removed only admin");
       });
+
       it("should remove admin in the middle", async() => {
-        await instance.addAdmin(adminAccount, {from:deployAccount});
         await instance.addAdmin(sellerAccount, {from: deployAccount});
         await instance.addAdmin(customerAccount, {from: deployAccount});
 
@@ -73,28 +86,65 @@ contract('OMarket', function (accounts) {
         assert.sameMembers(adminList, admins, "rest admin accounts should match");
 
       });
+
     });
+
     describe("StoreOwner", async () => {
+
       beforeEach(async () => {
         await instance.addAdmin(adminAccount, { from: deployAccount });
       });
+
       describe("addStoreOwner()", async () => {
+
         it("only the admin should be able to add a store owner", async () => {
-          await instance.addStoreOwner(sellerAccount, {from: adminAccount});
-          await catchRevert(instance.addStoreOwner(sellerAccount, { from: deployAccount }));
+          await instance.addStoreOwner(sellerAccount, 'Seller', {from: adminAccount});
+          await catchRevert(instance.addStoreOwner(sellerAccount, 'Seller', { from: deployAccount }));
         });
+
         it("adding an storeOwner should triggger an event", async () => {
-          const tx = await instance.addStoreOwner(sellerAccount, { from: adminAccount });
+          const tx = await instance.addStoreOwner(sellerAccount, 'Seller', { from: adminAccount });
           const eventData = tx.logs[0].args;
           assert.equal(eventData.storeOwnerAddress, sellerAccount, "added storeOwner address should match");
         });
+
       });
-      it("getStoreOwners should include store owner address", async() => {
-        await instance.addStoreOwner(sellerAccount, {from: adminAccount});
-        const sellers = await instance.getStoreOwners({from: adminAccount});
-        assert.equal(sellers.length, 1);
-        assert.equal(sellers[0], sellerAccount);
+
+      describe("has valid storeOwner", async () => {
+
+        beforeEach(async () => {
+          await instance.addStoreOwner(sellerAccount, 'Seller', {from: adminAccount});
+        });
+
+        it("getStoreOwners should include store owner address", async() => {
+          const sellers = await instance.getStoreOwners({from: adminAccount});
+          assert.equal(sellers.length, 1);
+          assert.equal(sellers[0], sellerAccount);
+        });
+
+        it("readStoreOwner should return informations about store owner", async() => {
+          const result = await instance.readStoreOwner(sellerAccount, {from: adminAccount});
+          const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
+          assert.equal(owner.addr, sellerAccount, 'Store Owner Address should be same');
+          assert.equal(owner.name, 'Seller', 'Store Owner name should be same');
+          assert.equal(owner.isActive, true, 'Account should be active after first creation');
+        });
+
+        it("should not add same store owner again", async() => {
+          await catchRevert(instance.addStoreOwner(sellerAccount, 'Seller', { from: adminAccount }));
+        });
+
+        it("user should get if user is storeOwner", async() => {
+          const isAdminStoreOwner = await instance.isStoreOwner({from: adminAccount});
+          assert.equal(isAdminStoreOwner, false);
+          const isSellerStoreOwner = await instance.isStoreOwner({from: sellerAccount});
+          assert.equal(isSellerStoreOwner, true);
+        });
+
       });
+
     });
+
   });
-})
+
+});
