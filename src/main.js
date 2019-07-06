@@ -117,7 +117,7 @@ new Vue({
     },
     contractSubscribe: async function(eventName, callback) {
       //FIXME: Connect web3 via websocket api
-    //TODO: Research how metamask ws provider
+      //TODO: Research how metamask ws provider
       this.web3.subscribe(eventName, async (error, event) => {
         if (error) {
           console.error(`Error occured on event ${eventName}; ${error}`);

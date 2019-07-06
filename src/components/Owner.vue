@@ -42,6 +42,7 @@
             size="mini"
             type="danger"
             icon="el-icon-remove-outline"
+            :disabled="isRemoving(scope.row)"
             @click="removeAdmin(scope.$index, scope.row)"
           >
             Remove
@@ -58,7 +59,13 @@ export default {
       adminForm: {
         address: ''
       },
-      adminList: []
+      adminList_: [],
+      removingList: []
+    }
+  },
+  computed: {
+    adminList() {
+      return this.adminList_;
     }
   },
   mounted: function() {
@@ -66,9 +73,10 @@ export default {
   },
   methods: {
     async refreshList() {
-      this.adminList = await this.$root.contractCall('getAdmins');
+      this.adminList_ = await this.$root.contractCall('getAdmins');
     },
     async removeAdmin(index, address) {
+      this.removingList.push(address);
       await this.$root.contractSend('removeAdmin', address);
       this.refreshList();
     },
@@ -76,6 +84,10 @@ export default {
       //TODO: Validate address
       await this.$root.contractSend('addAdmin', this.adminForm.address);
       this.refreshList();
+    },
+    isRemoving(address) {
+      const removingIndex = this.removingList.findIndex(a => address===a);
+      return removingIndex != -1;
     }
   }
 }
