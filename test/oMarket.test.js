@@ -141,6 +141,19 @@ contract('OMarket', function (accounts) {
           assert.equal(isSellerStoreOwner, true);
         });
 
+        it("can toggle active status", async() => {
+          let txResult = await instance.toggleStoreOwnerStatus(sellerAccount, {from: adminAccount});
+          let status = txResult.logs[0].args[1];
+          assert.equal(false, status, 'Store owner should not be active');
+          txResult = await instance.toggleStoreOwnerStatus(sellerAccount, {from: adminAccount});
+          status = txResult.logs[0].args[1];
+          assert.equal(true, status, 'Store owner should be active');
+        });
+
+        it("toggle status should be reverted if the address is not store owner", async() => {
+          await catchRevert(instance.toggleStoreOwnerStatus(adminAccount, {from: adminAccount}));
+        });
+
       });
 
     });

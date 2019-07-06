@@ -56,7 +56,7 @@
         :key="item.uuid"
         :type="consoleDataType(item)"
       >
-        <b>{{ item.action }}:</b> {{ item.method }}
+        <b>{{ item.action }}:</b> {{ item.method }}( {{ item.args }} )
         <p v-if="item.result">
           {{ item.result }}
         </p>
@@ -125,10 +125,5 @@ export default {
   }
   .el-alert {
     margin: 2px;
-  }
-  #console {
-    height:100%;
-    width:100%;
-    overflow-y: scroll;
   }
 </style>

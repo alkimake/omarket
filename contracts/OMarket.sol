@@ -13,6 +13,7 @@ contract OMarket is Ownable {
   event StoreOwnerAdded(address storeOwnerAddress);
   event StoreOwnerRemoved(address storeOwnerAddress);
   event LogStoreOwner(address, string, bool);
+  event LogStoreOwnerStatusChanged(address storeOwnerAddress, bool isActive);
 
   modifier onlyAdmin() {
     require(isAdmin(msg.sender), 'Can not verify admin');
@@ -140,6 +141,16 @@ contract OMarket is Ownable {
     string memory name = seller.name;
     bool isActive = seller.isActive;
     return (addr, name, isActive);
+  }
+
+  function toggleStoreOwnerStatus(address storeOwnerAddress)
+    public
+    onlyAdmin
+  {
+    require(isStoreOwner(storeOwnerAddress), 'Address is not store owner');
+    StoreOwner storage seller = storeOwners[storeOwnerAddress];
+    seller.isActive = !seller.isActive;
+    emit LogStoreOwnerStatusChanged(seller.addr, seller.isActive);
   }
 
   //TODO: implement removal of store owner

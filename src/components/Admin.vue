@@ -47,7 +47,23 @@
         label="Active"
       >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.isActive }}</span>
+          <i :class="scope.row.isActive ? 'el-icon-success' : 'el-icon-warning'"></i>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Operations"
+        width="120"
+        fixed="right"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            :type="scope.row.isActive ? 'danger' : 'primary'"
+            icon="el-icon-remove-outline"
+            @click="toggleStatus(scope.$index, scope.row.addr)"
+          >
+            {{ scope.row.isActive ? 'Disable' : 'Enable' }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,6 +91,10 @@ export default {
         const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
         return owner;
       }));
+    },
+    async toggleStatus(index, address) {
+      await this.$root.contractSend('toggleStoreOwnerStatus', address);
+      this.refreshList();
     },
     async addStoreOwner() {
       //TODO: Validate address
