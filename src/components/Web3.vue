@@ -1,5 +1,7 @@
 <template>
-  <div id="console">
+  <div
+    id="console"
+  >
     <el-alert
       v-if="hasInjectedWeb3"
       type="success"
@@ -46,6 +48,23 @@
       Or you do but the account is currently inaccessible.
       <br>Make your existing account accessible
     </el-alert>
+    <div
+      v-if="hasInjectedWeb3 && isConnectedToApprovedNetwork && coinbase"
+    >
+      <el-alert
+        v-for="item in consoleData"
+        :key="item.uuid"
+        :type="consoleDataType(item)"
+      >
+        <b>{{ item.action }}:</b> {{ item.method }}
+        <p v-if="item.result">
+          {{ item.result }}
+        </p>
+        <p v-if="item.err">
+          {{ item.err.message }}
+        </p>
+      </el-alert>
+    </div>
   </div>
 </template>
 
@@ -55,6 +74,9 @@ import { APPROVED_NETWORK_ID, NETWORKS } from '../util/constants'
 export default {
   name: 'Home',
   computed: {
+    consoleData() {
+      return this.$root.consoleData;
+    },
     hasInjectedWeb3() {
       return this.$root.web3.isInjected;
     },
@@ -75,6 +97,17 @@ export default {
     },
   },
   methods: {
+    consoleDataType (item) {
+      if (item.success) {
+        return 'success';
+      }
+      if (item.error) {
+        return 'error';
+      }
+      if (item.action === 'send') {
+        return 'info';
+      }
+    },
     goToMetamask () {
       window.location.href = 'https://metamask.io/'
     }
@@ -92,5 +125,10 @@ export default {
   }
   .el-alert {
     margin: 2px;
+  }
+  #console {
+    height:100%;
+    width:100%;
+    overflow-y: scroll;
   }
 </style>

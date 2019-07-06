@@ -49,6 +49,7 @@ new Vue({
       },
       user: {},
       subscribedEvents: {},
+      consoleData: [],
     };
   },
   computed: {
@@ -93,25 +94,33 @@ new Vue({
   methods: {
     contractSend: async function(method, ...args) {
       //FIXME: Wait calling methods until web3 is ready
+      const cData = { args, method, action: 'send', success:false }
+      this.consoleData.push(cData);
       try {
-        console.log(`args ${args} sending to ${method}`);
         const result = await this.oMarket[method](...args).send({from: this.web3.coinbase});
-        console.log(`method send: "${method}" returned ${result}`);
+        cData.result = result;
+        cData.success = true;
         return result;
       } catch(err) {
-        // console.error("Error occured on transaction", err);
+        cData.err = err;
+        cData.success = false;
+        //FIXME: Throw error to show something is wrong to the user
         return null;
       }
     },
     contractCall: async function(method, ...args) {
       //FIXME: Wait calling methods until web3 is ready
+      const cData = { args, method, action: 'call', success:false }
+      this.consoleData.push(cData);
       try {
-        console.log(`${method} is calling with args ${args}`);
         const result = await this.oMarket[method](...args).call();
-        console.log(`method: "${method}" returned ${result}`);
+        cData.result = result;
+        cData.success = true;
         return result;
       } catch(err) {
-        // console.error("Error occured on transaction", err);
+        cData.err = err;
+        cData.success = false;
+        //FIXME: Throw error to show something is wrong to the user
         return null;
       }
     },
