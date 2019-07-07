@@ -36,6 +36,26 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-table
+      :data="storeList"
+      style="width: 100%"
+    >
+      <el-table-column
+        label="Address"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-star-on"></i>
+          <span style="margin-left: 10px">{{ scope.row.addr }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Name"
+      >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
@@ -52,11 +72,26 @@ export default {
           ]
         }
       },
+      storeList: [],
     }
   },
+  mounted: function() {
+    this.refreshList();
+  },
   methods: {
+    async refreshList() {
+      const list = await this.$root.contractCall('getStores');
+      this.storeList = list.map(item => ({addr: item}));
+      // this.storeOwnerList = await Promise.all(list.map(async addr => {
+      //   const result = await this.$root.contractCall('readStoreOwner', addr);
+      //   const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
+      //   return owner;
+      // }));
+    },
+
     async addNewStore() {
-      console.log(this.newStoreForm.name, this.newStoreForm.labels.join(','));
+      await this.$root.contractSend('addNewStore', this.newStoreForm.name, this.newStoreForm.labels.join(','));
+      this.refreshList();
     }
   }
 }

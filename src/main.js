@@ -140,7 +140,8 @@ new Vue({
         const owner = await this.contractCall('owner');
         const isOwner = owner === this.web3.accounts[0];
         const isAdmin = await this.contractCall('isAdmin');
-        this.user = { isOwner, isAdmin };
+        const isStoreOwner = await this.contractCall('isStoreOwner');
+        this.user = { isOwner, isAdmin, isStoreOwner };
       } catch(error) {
         console.error(error);
       }

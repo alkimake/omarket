@@ -9,6 +9,7 @@
       Store
     </el-menu-item>
     <el-menu-item
+      v-if="$root.user.isStoreOwner"
       index="1"
     >
       Store Owner
