@@ -19,13 +19,14 @@ contract Store is Ownable {
     uint totalStock;
     uint sales;
     bool isAvailable;
+    uint price;
     mapping(address => uint) buyers;
   }
 
   mapping (uint => Product) products;
 
-  event LogProductAdded(string name, string desc, string imageURL, uint totalStock, uint productId);
-
+  event LogProductAdded(string name, string desc, string imageURL, uint totalStock, uint price, uint productId);
+  event LogBuyProducts(address buyer, uint productId, uint amount);
   constructor (address storeOwner, string memory _name, string memory _labelsSeperatedByCommas)
     public
   {
@@ -40,20 +41,20 @@ contract Store is Ownable {
     transferOwnership(storeOwner);
   }
 
-  function addProduct(string memory name_, string memory desc, string memory image, uint stock)
+  function addProduct(string memory name_, string memory desc, string memory image, uint stock, uint price)
     public
     onlyOwner
     returns(uint)
   {
-    products[idGenerator++] = Product(name_, desc, image, stock, 0, true);
-    emit LogProductAdded(name_, desc, image, stock, idGenerator);
+    products[idGenerator++] = Product(name_, desc, image, stock, 0, true, price);
+    emit LogProductAdded(name_, desc, image, stock, price, idGenerator);
     return idGenerator;
   }
 
   function readProduct(uint productId)
     public
     view
-    returns(string memory, string memory, string memory, uint, uint, bool)
+    returns(string memory, string memory, string memory, uint, bool, uint)
   {
     string memory name_ = products[productId].name;
     string memory description = products[productId].description;
@@ -61,8 +62,24 @@ contract Store is Ownable {
     uint sales = products[productId].sales;
     uint stock = products[productId].totalStock - sales;
     bool isAvailable = products[productId].isAvailable;
-    return(name_, description, imageURL, stock, sales, isAvailable);
+    uint price = products[productId].price;
+    return(name_, description, imageURL, stock, isAvailable, price);
   }
 
+  function buyProducts(uint id, uint amount)
+    public
+    payable
+  {
+    Product storage myProduct = products[id];
+    require(myProduct.isAvailable, 'Event is not open');
+    uint _price = amount*myProduct.price;
+    require(msg.value >= _price, 'Insufficiant fund to purchase');
+    require(amount <= myProduct.totalStock - myProduct.sales, 'There is not enough ticket to purchase');
+    myProduct.buyers[msg.sender] += amount;
+    myProduct.sales += amount;
+    uint refund = msg.value - _price;
+    msg.sender.transfer(refund);
+    emit LogBuyProducts(msg.sender, id, amount);
+  }
 
 }
