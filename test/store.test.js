@@ -68,4 +68,20 @@ contract('Store', function (accounts) {
 
   });
 
+  describe("readProduct()", async() =>{
+    it("providing the product Id should return the correct product details", async() => {
+      await instance.addProduct(p_potato.name, p_potato.description, p_potato.imageURL, p_potato.totalStock, {from: deployAccount} )
+      const productDetails = await instance.readProduct(0)
+
+      assert.equal(productDetails['0'], p_potato.name, "the prpduct names should match")
+      assert.equal(productDetails['1'], p_potato.description, "the prpduct descriptions should match")
+      assert.equal(productDetails['2'], p_potato.imageURL, "the imageURL details should match")
+      assert.equal(productDetails['3'].toString(10), p_potato.totalStock.toString(10), "the same number of stocks should be available")
+      assert.equal(productDetails['4'], 0, "the product sales should be 0");
+      assert.equal(productDetails['5'], true, "the product should be available");
+
+    })
+  })
+
+
 });

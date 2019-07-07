@@ -50,5 +50,19 @@ contract Store is Ownable {
     return idGenerator;
   }
 
+  function readProduct(uint productId)
+    public
+    view
+    returns(string memory, string memory, string memory, uint, uint, bool)
+  {
+    string memory name_ = products[productId].name;
+    string memory description = products[productId].description;
+    string memory imageURL = products[productId].imageURL;
+    uint sales = products[productId].sales;
+    uint stock = products[productId].totalStock - sales;
+    bool isAvailable = products[productId].isAvailable;
+    return(name_, description, imageURL, stock, sales, isAvailable);
+  }
+
 
 }
