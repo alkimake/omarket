@@ -178,4 +178,46 @@ contract('OMarket', function (accounts) {
 
   });
 
+  describe('Stores', async () => {
+    const STORE_NAME = 'My Awesome Store';
+    const STORE_LABELS = ['Food', 'Goods', 'Electronics'];
+    beforeEach(async () => {
+      await instance.addAdmin(adminAccount, { from: deployAccount});
+      await instance.addStoreOwner(sellerAccount, 'Seller', {from: adminAccount});
+    });
+
+    it('should create new store from storeOwner', async () => {
+      const tx = await instance.addNewStore(STORE_NAME, STORE_LABELS.join(','), {from: sellerAccount});
+      const event = tx.logs.find(log => log.event === 'CreatedNewStore');
+      const ownerAddress = event.args[0];
+      const addressOfStore = event.args[1];
+      assert.equal(ownerAddress, sellerAccount, 'owner should be seller');
+      assert.isNotNull(addressOfStore, 'Need to receive new address of the store');
+    });
+
+    it('store list should revert', async () => {
+      await catchRevert(instance.getStores({from: sellerAccount}), 'when there is no store of the owner');
+    })
+
+    describe('when created a store', async () => {
+      let firstStoreAddress = null;
+      beforeEach(async () => {
+        const tx = await instance.addNewStore(STORE_NAME, STORE_LABELS.join(','), {from: sellerAccount});
+        const event = tx.logs.find(log => log.event === 'CreatedNewStore');
+        firstStoreAddress = event.args[1];
+      });
+      it('store list for owner should contain first store', async () => {
+        const stores = await instance.getStores({from: sellerAccount});
+        assert.include(stores, firstStoreAddress, 'first address that is created should be in store list');
+        assert.equal(stores[0], firstStoreAddress, 'first item of the stores must be first store address');
+      });
+      it('can not create more than 5 store', async () => {
+        for (const x of Array(4).keys()) {
+          await instance.addNewStore(STORE_NAME + x, STORE_LABELS.join(','), {from: sellerAccount});
+        }
+        await catchRevert(instance.addNewStore(STORE_NAME, STORE_LABELS.join(','), {from: sellerAccount}), 'should be reverted on 6th');
+      });
+    });
+  });
+
 });

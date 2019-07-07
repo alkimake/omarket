@@ -3,11 +3,16 @@ pragma solidity >=0.4.21 <0.6.0;
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'openzeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
+import './Store.sol';
+
 contract OMarket is Ownable, Pausable {
   address[] admins;
   mapping(address => StoreOwner) storeOwners;
   address[] storeOwnersLUT;
   uint STORE_CAP = 5;
+
+  mapping(address => mapping(uint => address)) stores;
+  mapping(address => uint) storeIdGenerators;
 
   event AdminAdded(address adminAddress);
   event AdminRemoved(address adminAddress);
@@ -16,10 +21,18 @@ contract OMarket is Ownable, Pausable {
   event LogStoreOwner(address, string, bool);
   event LogStoreOwnerStatusChanged(address storeOwnerAddress, bool isActive);
 
+  event CreatedNewStore(address owner, address store);
+
   modifier onlyAdmin() {
     require(isAdmin(msg.sender), 'Can not verify admin');
     _;
   }
+
+  modifier onlyStoreOwner() {
+    require(isStoreOwner(msg.sender), 'Can not verify store owner');
+    _;
+  }
+
 
   struct StoreOwner {
     address addr;
@@ -157,4 +170,43 @@ contract OMarket is Ownable, Pausable {
   }
 
   //TODO: implement removal of store owner
+
+  function addNewStore(string memory name, string memory labels)
+    public
+    onlyStoreOwner
+    returns(address)
+  {
+    uint nextStoreId = storeIdGenerators[msg.sender]+1;
+    if (nextStoreId == STORE_CAP+1) {
+      revert('Capped store count for this store owner');
+    }
+    storeIdGenerators[msg.sender] = nextStoreId;
+    Store store = new Store(msg.sender, name, labels);
+    stores[msg.sender][nextStoreId] = address(store);
+    emit CreatedNewStore(msg.sender, address(store));
+    return address(store);
+  }
+
+  function getStoresOfOwner(address storeOwnerAddress)
+    private
+    view
+    returns(address[] memory)
+  {
+    mapping(uint => address) storage storesOfOwner = stores[storeOwnerAddress];
+    require(storesOfOwner[1] != address(0), 'Theres is no store for this owner');
+    uint count = storeIdGenerators[msg.sender];
+    address[] memory rStores = new address[](count);
+    for (uint index = 1; index <= count; index++) {
+      rStores[index-1] = storesOfOwner[index];
+    }
+    return rStores;
+  }
+
+  function getStores()
+    public
+    view
+    returns(address[] memory)
+  {
+    return getStoresOfOwner(msg.sender);
+  }
 }
