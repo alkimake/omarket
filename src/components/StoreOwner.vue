@@ -37,8 +37,11 @@
       </el-form-item>
     </el-form>
     <el-table
+      ref="storelistTable"
       :data="storeList"
+      highlight-current-row
       style="width: 100%"
+      @current-change="handleCurrentChange"
     >
       <el-table-column
         label="Address"
@@ -58,23 +61,31 @@
       <el-table-column
         prop="tag"
         label="Labels"
-        width="100"
       >
         <template slot-scope="scope">
           <el-tag
             v-for="item in scope.row.labels"
             :key="item"
             disable-transitions
+            style="margin-left:5px;"
           >
             {{ item }}
           </el-tag>
         </template>
       </el-table-column>
     </el-table>
+    <store-detail
+      v-if="currentRow"
+      :store="currentRow"
+    ></store-detail>
   </div>
 </template>
 <script>
+import StoreDetail from './StoreDetail.vue';
 export default {
+  components: {
+    StoreDetail
+  },
   data() {
     return {
       newStoreForm: {
@@ -88,15 +99,21 @@ export default {
         }
       },
       storeList: [],
+      currentRow: null,
     }
   },
-  mounted: function() {
-    this.refreshList();
+  mounted: async function() {
+    await this.refreshList();
+    if (this.storeList.length > 0) {
+      this.$refs.storelistTable.setCurrentRow(this.storeList[0]);
+    }
   },
   methods: {
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    },
     async refreshList() {
       const list = await this.$root.contractCall('getStores');
-      this.storeList = list.map(item => ({addr: item}));
       this.storeList = await Promise.all(list.map(async addr => {
         const info = await this.$root.storeCall(addr, 'getInfo');
         const store = { addr, name:info['0'], labels:info['1'] };
