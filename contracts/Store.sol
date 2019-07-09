@@ -1,4 +1,5 @@
 pragma solidity >=0.4.21 <0.6.0;
+pragma experimental ABIEncoderV2;
 
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import { strings } from "./lib/strings.sol";
@@ -80,6 +81,14 @@ contract Store is Ownable {
     uint refund = msg.value - _price;
     msg.sender.transfer(refund);
     emit LogBuyProducts(msg.sender, id, amount);
+  }
+
+  function getInfo()
+    public
+    view
+    returns(string memory, string[] memory)
+  {
+    return (name, labels);
   }
 
 }

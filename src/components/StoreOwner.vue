@@ -55,6 +55,21 @@
           <span style="margin-left: 10px">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="tag"
+        label="Labels"
+        width="100"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            v-for="item in scope.row.labels"
+            :key="item"
+            disable-transitions
+          >
+            {{ item }}
+          </el-tag>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -82,13 +97,12 @@ export default {
     async refreshList() {
       const list = await this.$root.contractCall('getStores');
       this.storeList = list.map(item => ({addr: item}));
-      // this.storeOwnerList = await Promise.all(list.map(async addr => {
-      //   const result = await this.$root.contractCall('readStoreOwner', addr);
-      //   const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
-      //   return owner;
-      // }));
+      this.storeList = await Promise.all(list.map(async addr => {
+        const info = await this.$root.storeCall(addr, 'getInfo');
+        const store = { addr, name:info['0'], labels:info['1'] };
+        return store;
+      }));
     },
-
     async addNewStore() {
       await this.$root.contractSend('addNewStore', this.newStoreForm.name, this.newStoreForm.labels.join(','));
       this.refreshList();

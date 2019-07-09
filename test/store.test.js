@@ -51,6 +51,13 @@ contract('Store', function (accounts) {
       assert.equal(owner2, sellerAccount, "owner can be transferred on initialization");
     });
 
+    it("Info", async () => {
+      const info = await instance.getInfo({from: deployAccount});
+      const labels = STORE_LABELS.split(",");
+      assert.equal(info['0'], STORE_NAME, "Name should return correctly");
+      assert.deepEqual(info['1'], labels, "Labels should return correctly");
+    });
+
   });
 
   describe('Adding product', async () => {

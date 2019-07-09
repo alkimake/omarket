@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 
 import OMarketContract from "./contracts/OMarket.json";
+import StoreContract from "./contracts/Store.json";
 import getWeb3 from './util/web3/getWeb3'
 
 import { APPROVED_NETWORK_ID } from './util/constants'
@@ -103,12 +104,28 @@ new Vue({
     }
   },
   methods: {
-    contractSend: async function(method, ...args) {
+    contractSendWithInstance: async function(instance, method, ...args) {
       //FIXME: Wait calling methods until web3 is ready
       const cData = { args, method, action: 'send', success:false }
       this.consoleData.push(cData);
       try {
-        const result = await this.oMarket[method](...args).send({from: this.web3.coinbase});
+        const result = await instance[method](...args).send({from: this.web3.coinbase});
+        cData.result = result;
+        cData.success = true;
+        return result;
+      } catch(err) {
+        cData.err = err;
+        cData.success = false;
+        //FIXME: Throw error to show something is wrong to the user
+        return null;
+      }
+    },
+    contractCallWithInstance: async function(instance, method, ...args) {
+      //FIXME: Wait calling methods until web3 is ready
+      const cData = { args, method, action: 'call', success:false }
+      this.consoleData.push(cData);
+      try {
+        const result = await instance[method](...args).call();
         cData.result = result;
         cData.success = true;
         return result;
@@ -120,20 +137,24 @@ new Vue({
       }
     },
     contractCall: async function(method, ...args) {
-      //FIXME: Wait calling methods until web3 is ready
-      const cData = { args, method, action: 'call', success:false }
-      this.consoleData.push(cData);
-      try {
-        const result = await this.oMarket[method](...args).call();
-        cData.result = result;
-        cData.success = true;
-        return result;
-      } catch(err) {
-        cData.err = err;
-        cData.success = false;
-        //FIXME: Throw error to show something is wrong to the user
-        return null;
-      }
+      return this.contractCallWithInstance(this.oMarket, method, ...args);
+    },
+    contractSend: async function(method, ...args) {
+      return this.contractSendWithInstance(this.oMarket, method, ...args);
+    },
+    getStoreContract: function (addr) {
+      return new this.web3.handle.eth.Contract(
+        StoreContract.abi,
+        addr,
+      ).methods;
+    },
+    storeCall: async function(addr, method, ...args) {
+      const instance = this.getStoreContract(addr);
+      return this.contractCallWithInstance(instance, method, ...args);
+    },
+    storeSend: async function(addr, method, ...args) {
+      const instance = this.getStoreContract(addr);
+      return this.contractSendWithInstance(instance, method, ...args);
     },
     contractSubscribe: async function(eventName, callback) {
       //FIXME: Connect web3 via websocket api
