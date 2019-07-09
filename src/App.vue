@@ -1,15 +1,20 @@
 
 <template>
   <div id="content">
-    <NavBar></NavBar>
-    <el-row :gutter="20">
-      <el-col :span="18">
-        <router-view></router-view>
-      </el-col>
-      <el-col :span="6">
-        <Web3></Web3>
-      </el-col>
-    </el-row>
+    <Web3 v-if="!visible"></Web3>
+    <div
+      v-else
+      id="main-page"
+    >
+      <NavBar></NavBar>
+      <el-row :gutter="20">
+        <el-col :span="18">
+          <router-view></router-view>
+        </el-col>
+        <el-col :span="6">
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -22,10 +27,10 @@ export default {
     NavBar,
     Web3
   },
-  data() {
-    return {
-      visible: true
-    }
+  computed: {
+    visible: function () {
+      return this.$root.web3.isDAppReady;
+    },
   }
 };
 </script>

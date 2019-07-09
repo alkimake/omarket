@@ -7,6 +7,8 @@ import router from './router'
 import OMarketContract from "./contracts/OMarket.json";
 import getWeb3 from './util/web3/getWeb3'
 
+import { APPROVED_NETWORK_ID } from './util/constants'
+
 Vue.config.devtools = true
 Vue.config.productionTip = false
 
@@ -28,7 +30,6 @@ const connectToNetwork = async () => {
     OMarketContract.abi,
     deployedNetwork && deployedNetwork.address,
   );
-
   return { web3, accounts, networkId, coinbase, hasInjectedWeb3, instance };
 }
 
@@ -45,7 +46,9 @@ new Vue({
         error: null,
         instance: null,
         isInjected: false,
-        networkId: null
+        networkId: null,
+        isConnectedToApprovedNetwork: false,
+        isDAppReady: false,
       },
       user: {},
       subscribedEvents: {},
@@ -55,11 +58,11 @@ new Vue({
   computed: {
     oMarket: function () {
       return (this.web3 && this.web3.instance) ? this.web3.instance.methods : null;
-    }
+    },
   },
   watch: {
-    'web3.hasInjectedWeb3': (web3ConnectionValue) => {
-      console.log('hasInjectedWeb3: ', web3ConnectionValue)
+    'web3.isInjected': (web3ConnectionValue) => {
+      console.log('isInjected: ', web3ConnectionValue)
     },
     'web3.networkId': (networkId) => {
       console.log('networkId: ', networkId)
@@ -67,12 +70,15 @@ new Vue({
     'web3.coinbase': (coinbase) => {
       console.log('coinbase: ', coinbase)
     },
-    isDAppReady: (isDAppReady) => {
+    'web3.isDAppReady': (isDAppReady) => {
       console.log('isDAppReady: ', isDAppReady)
     },
     'web3.accounts': (accounts) => {
       console.log('accounts: ', accounts)
-    }
+    },
+    'web3.isConnectedToApprovedNetwork': (isConnectedToApprovedNetwork) => {
+      console.log('isConnectedToApprovedNetwork', isConnectedToApprovedNetwork);
+    },
   },
   beforeCreate: async function () {
     try {
@@ -83,6 +89,11 @@ new Vue({
       this.web3.isInjected = web3.hasInjectedWeb3;
       this.web3.networkId = web3.networkId;
       this.web3.instance = web3.instance;
+      this.web3.isConnectedToApprovedNetwork = APPROVED_NETWORK_ID == web3.networkId;
+
+      if (this.web3.isInjected && this.web3.isConnectedToApprovedNetwork && this.web3.coinbase) {
+        this.web3.isDAppReady = true;
+      }
       // this.subscribeLogEvent(OMarketContract, 'AdminAdded')
       // this.subscribeLogEvent(OMarketContract, 'AdminRemoved')
       await this.getUserBasics();
