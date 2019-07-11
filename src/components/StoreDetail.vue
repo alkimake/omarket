@@ -90,7 +90,6 @@ export default {
         }
       }
       this.productList = list;
-      console.log(this.productList);
     }
   }
 };

@@ -125,11 +125,28 @@ new Vue({
       }
     },
     contractCallWithInstance: async function(instance, method, ...args) {
-      //FIXME: Wait calling methods until web3 is ready
       const cData = { args, method, action: 'call', success:false }
       this.consoleData.push(cData);
       try {
         const result = await instance[method](...args).call();
+        cData.result = result;
+        cData.success = true;
+        return result;
+      } catch(err) {
+        cData.err = err;
+        cData.success = false;
+        //FIXME: Throw error to show something is wrong to the user
+        return null;
+      }
+    },
+    contractSendValueWithInstance: async function(instance, method, value, ...args) {
+      const cData = { args, method, action: 'send', success:false }
+      this.consoleData.push(cData);
+      try {
+        const result = await new Promise((resolve, reject) => instance[method](...args)
+          .send({from: this.web3.coinbase, value})
+          .once('transactionHash', resolve)
+          .on('error', reject));
         cData.result = result;
         cData.success = true;
         return result;
@@ -159,6 +176,10 @@ new Vue({
     storeSend: async function(addr, method, ...args) {
       const instance = this.getStoreContract(addr);
       return this.contractSendWithInstance(instance, method, ...args);
+    },
+    storeSendWithValue: async function(addr, method, value, ...args) {
+      const instance = this.getStoreContract(addr);
+      return this.contractSendValueWithInstance(instance, method, value, ...args);
     },
     contractSubscribe: async function(eventName, callback) {
       //FIXME: Connect web3 via websocket api
