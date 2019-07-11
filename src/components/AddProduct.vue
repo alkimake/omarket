@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    v-loading="loading"
+    :element-loading-text="loadingText"
+  >
     <h2>Add New Product to {{ store.name }}</h2>
     <el-form
       ref="form"
@@ -48,6 +51,9 @@
 import { read } from 'fs';
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001,protocol: 'https' });
+
+const LOADING_TEXT_UPLOAD = 'Uploading Image';
+const LOADING_TEXT_PRODUCT = 'Creating New Product';
 export default {
   props: {
     store: Object
@@ -62,6 +68,8 @@ export default {
         totalStock: 1,
         file: '',
       },
+      loading: false,
+      loadingText: LOADING_TEXT_UPLOAD,
     };
   },
   computed: {
@@ -71,7 +79,10 @@ export default {
   },
   methods: {
     async onSubmit() {
+      this.loadingText = LOADING_TEXT_PRODUCT;
+      this.loading = true;
       await this.$root.storeSend(this.store.addr, 'addProduct', this.form.name, this.form.desc, this.form.imageUrl, this.form.totalStock, this.form.price);
+      this.loading = false;
     },
     async handleAdd(ev) {
 
@@ -100,6 +111,8 @@ export default {
         this.$message.error("Product picture size can not exceed 2MB!");
         return;
       }
+      this.loading = true;
+      this.loadingText = LOADING_TEXT_UPLOAD;
       const reader = new FileReader(file);
       reader.onloadend = () => this.uploadImage(reader);
       reader.readAsArrayBuffer(file);
@@ -112,6 +125,7 @@ export default {
       const ipfsHash = await ipfs.add(buffer);
       console.log(ipfsHash);
       this.form.imageUrl = ipfsHash[0].hash;
+      this.loading = false;
     }
   }
 };
