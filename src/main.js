@@ -110,7 +110,10 @@ new Vue({
       const cData = { args, method, action: 'send', success:false }
       this.consoleData.push(cData);
       try {
-        const result = await instance[method](...args).send({from: this.web3.coinbase});
+        const result = await new Promise((resolve, reject) => instance[method](...args)
+          .send({from: this.web3.coinbase})
+          .once('transactionHash', resolve)
+          .on('error', reject));
         cData.result = result;
         cData.success = true;
         return result;
