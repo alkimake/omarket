@@ -6,7 +6,7 @@ import router from './router'
 
 import OMarketContract from "./contracts/OMarket.json";
 import StoreContract from "./contracts/Store.json";
-import getWeb3 from './util/web3/getWeb3'
+import getWeb3 from './util/web3/getWeb3';
 import { blockie } from './util/icon';
 
 import { APPROVED_NETWORK_ID } from './util/constants'
@@ -18,7 +18,7 @@ Vue.use(ElementUI);
 
 
 const connectToNetwork = async () => {
-  const web3 = await getWeb3();
+  const {web3, fallback} = await getWeb3({fallback: {type:'http', url:'http://127.0.0.1:8545'}});
 
   // Use web3 to get the user's accounts.
   const accounts = await web3.eth.getAccounts();
@@ -32,7 +32,7 @@ const connectToNetwork = async () => {
     OMarketContract.abi,
     deployedNetwork && deployedNetwork.address,
   );
-  return { web3, accounts, networkId, coinbase, hasInjectedWeb3, instance };
+  return { web3: web3 ? web3 : fallback, accounts, networkId, coinbase, hasInjectedWeb3, instance };
 }
 
 new Vue({
@@ -163,7 +163,7 @@ new Vue({
     contractSubscribe: async function(eventName, callback) {
       //FIXME: Connect web3 via websocket api
       //TODO: Research how metamask ws provider
-      this.web3.subscribe(eventName, async (error, event) => {
+      return this.web3.handle.subscribe(eventName, async (error, event) => {
         if (error) {
           console.error(`Error occured on event ${eventName}; ${error}`);
           return;
