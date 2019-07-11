@@ -128,6 +128,25 @@ contract('Store', function (accounts) {
       assert.equal(eventData.productId, 0, "the event should have the correct productId")
       assert.equal(eventData.amount, amount, "the event should have the correct number of products purchased")
     });
+    describe('Owner balance', async() => {
+      it('should have correct balance', async()=> {
+        const amount = 1;
+        const value = p_potato.price * amount;
+        await instance.buyProducts(0, amount, {from: customerAccount, value});
+        const currentBalance = await instance.currentBalance({from: deployAccount});
+        assert.equal(currentBalance, value, 'current balance and value is same');
+      });
+      it('should return correct balance', async() => {
+        const preSaleAmount = await web3.eth.getBalance(deployAccount);
+        const amount = 1;
+        const value = p_potato.price * amount;
+        await instance.buyProducts(0, amount, {from: customerAccount, value});
+        await instance.receiveBalance({from: deployAccount});
+        const postSaleAmount = await web3.eth.getBalance(deployAccount);
+        const difference = (postSaleAmount.slice(-4) - preSaleAmount.slice(-4));
+        assert.equal(difference, value, 'received balance with the price of sale');
+      });
+    });
 
   });
 });

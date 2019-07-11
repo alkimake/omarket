@@ -12,6 +12,8 @@ contract Store is Ownable {
 
   uint public idGenerator;
 
+  uint balance = 0;
+
 
   struct Product {
     string name;
@@ -28,6 +30,8 @@ contract Store is Ownable {
 
   event LogProductAdded(string name, string desc, string imageURL, uint totalStock, uint price, uint productId);
   event LogBuyProducts(address buyer, uint productId, uint amount);
+  event LogGetBalance(address owner, uint balance);
+
   constructor (address storeOwner, string memory _name, string memory _labelsSeperatedByCommas)
     public
   {
@@ -78,6 +82,7 @@ contract Store is Ownable {
     require(amount <= myProduct.totalStock - myProduct.sales, 'There is not enough ticket to purchase');
     myProduct.buyers[msg.sender] += amount;
     myProduct.sales += amount;
+    balance += _price;
     uint refund = msg.value - _price;
     msg.sender.transfer(refund);
     emit LogBuyProducts(msg.sender, id, amount);
@@ -91,4 +96,27 @@ contract Store is Ownable {
     return (name, labels);
   }
 
+  function currentBalance()
+    public
+    view
+    onlyOwner
+    returns(uint)
+  {
+    return balance;
+  }
+
+  function receiveBalance()
+    public
+    onlyOwner
+  {
+    require(balance!=0, 'Account balance is 0');
+    uint fund = balance;
+    balance = 0;
+    msg.sender.transfer(fund);
+    emit LogGetBalance(msg.sender, fund);
+  }
+
+	//prime the data using the fallback function.
+	function() external {
+	}
 }
