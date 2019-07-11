@@ -9,11 +9,11 @@
           style="width: 100%"
         >
           <el-table-column type="expand">
-            <template slot-scope="props">
-              <p>Description: {{ props.row.desc }}</p>
-              <p>Available: {{ props.row.available }}</p>
-              <p>Price: {{ props.row.price }}wei</p>
-              <p>Avalable Stock: {{ props.row.stock }}</p>
+            <template slot-scope="scope">
+              <p>Description: {{ scope.row.desc }}</p>
+              <p>Available: {{ scope.row.available }}</p>
+              <p>Price: {{ scope.row.price }}wei</p>
+              <p>Avalable Stock: {{ scope.row.stock }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -60,11 +60,12 @@ export default {
   },
   methods: {
     async refreshList() {
+      const list = [];
       const lastId = await this.$root.storeCall(this.store.addr, 'idGenerator');
       console.log('id', lastId);
       for(let i = 0; i < lastId; i++) {
         const item = await this.$root.storeCall(this.store.addr, 'readProduct', i);
-        this.productList[i] = {
+        list[i] = {
           name: item['0'],
           desc: item['1'],
           imageHash: item['2'],
@@ -72,8 +73,9 @@ export default {
           available: item['4'],
           price: parseInt(item['5'])
         }
-        console.log(this.productList[i]);
       }
+      this.productList = list;
+      console.log(this.productList);
     }
   }
 };
