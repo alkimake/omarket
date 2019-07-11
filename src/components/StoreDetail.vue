@@ -23,8 +23,23 @@
           </el-table-column>
           <el-table-column
             label="Price"
-            prop="price"
           >
+            <template slot-scope="scope">
+              {{ scope.row.price }} wei
+            </template>
+          </el-table-column>
+          <el-table-column
+            label=""
+            width="64"
+          >
+            <template slot-scope="scope">
+              <el-image
+                style="width: 48px; height: 48px"
+                :src="$root.ipfsAddress(scope.row.imageHash)"
+                fit="fill"
+              >
+              </el-image>
+            </template>
           </el-table-column>
         </el-table>
       </el-col>

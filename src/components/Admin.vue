@@ -47,6 +47,7 @@
       </el-table-column>
       <el-table-column
         label="Active"
+        width="120"
       >
         <template slot-scope="scope">
           <i :class="scope.row.isActive ? 'el-icon-success' : 'el-icon-warning'"></i>

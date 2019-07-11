@@ -177,6 +177,9 @@ new Vue({
       } catch(error) {
         console.error(error);
       }
+    },
+    ipfsAddress(hash) {
+      return `https://gateway.ipfs.io/ipfs/${hash}`;
     }
   },
   template: '<App/>',
