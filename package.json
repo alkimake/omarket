@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "element-ui": "^2.9.1",
+    "ethereum-blockies": "^0.1.1",
     "http2": "^3.3.7",
     "ipfs-api": "^26.1.2",
     "vue": "^2.6.10",

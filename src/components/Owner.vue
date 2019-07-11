@@ -25,10 +25,22 @@
       style="width: 100%"
     >
       <el-table-column
+        label=""
+        width="64"
+      >
+        <template slot-scope="scope">
+          <el-image
+            style="width: 48px; height: 48px"
+            :src="$root.getAddressIcon(scope.row)"
+            fit="fill"
+          >
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="Address"
       >
         <template slot-scope="scope">
-          <i class="el-icon-star-on"></i>
           <span style="margin-left: 10px">{{ scope.row }}</span>
         </template>
       </el-table-column>

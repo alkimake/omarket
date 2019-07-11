@@ -7,6 +7,7 @@ import router from './router'
 import OMarketContract from "./contracts/OMarket.json";
 import StoreContract from "./contracts/Store.json";
 import getWeb3 from './util/web3/getWeb3'
+import { blockie } from './util/icon';
 
 import { APPROVED_NETWORK_ID } from './util/constants'
 
@@ -177,6 +178,9 @@ new Vue({
       } catch(error) {
         console.error(error);
       }
+    },
+    getAddressIcon(address) {
+      return blockie(address);
     },
     ipfsAddress(hash) {
       return `https://gateway.ipfs.io/ipfs/${hash}`;
