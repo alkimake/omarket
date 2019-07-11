@@ -85,6 +85,25 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column
+        label="Balance"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.balance }} wei
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Actions"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            @click="getBalance(scope.row)"
+          >
+            Receive
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <store-detail
       v-if="currentRow"
@@ -129,12 +148,16 @@ export default {
       this.storeList = await Promise.all(list.map(async addr => {
         const info = await this.$root.storeCall(addr, 'getInfo');
         const store = { addr, name:info['0'], labels:info['1'] };
+        store.balance = await this.$root.storeCall(addr, 'currentBalance');
         return store;
       }));
     },
     async addNewStore() {
       await this.$root.contractSend('addNewStore', this.newStoreForm.name, this.newStoreForm.labels.join(','));
       this.refreshList();
+    },
+    async getBalance(store) {
+      await this.$root.storeSend(store.addr, 'receiveBalance');
     }
   }
 }

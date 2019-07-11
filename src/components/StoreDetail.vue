@@ -12,7 +12,7 @@
             <template slot-scope="scope">
               <p>Description: {{ scope.row.desc }}</p>
               <p>Available: {{ scope.row.available }}</p>
-              <p>Price: {{ scope.row.price }}wei</p>
+              <p>Price: {{ scope.row.price }} wei</p>
               <p>Avalable Stock: {{ scope.row.stock }}</p>
             </template>
           </el-table-column>
