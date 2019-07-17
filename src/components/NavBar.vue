@@ -1,39 +1,62 @@
 <template>
-  <el-menu
-    :default-active="activeIndex"
-    class="el-menu-demo"
-    mode="horizontal"
-    @select="handleSelect"
-  >
-    <el-menu-item index="0">
-      Store
-    </el-menu-item>
-    <el-menu-item
-      v-if="$root.user.isStoreOwner"
-      index="1"
+  <div>
+    <el-button
+      style="float: right;"
+      type="primary"
+      @click="dialogConsoleVisible = true"
     >
-      Store Owner
-    </el-menu-item>
-    <el-menu-item
-      v-if="$root.user.isAdmin"
-      index="2"
+      Console
+    </el-button>
+    <div style="margin-right:100px;">
+      <el-menu
+        :default-active="activeIndex"
+        class="el-menu-demo"
+        mode="horizontal"
+        @select="handleSelect"
+      >
+        <el-menu-item index="0">
+          Store
+        </el-menu-item>
+        <el-menu-item
+          v-if="$root.user.isStoreOwner"
+          index="1"
+        >
+          Store Owner
+        </el-menu-item>
+        <el-menu-item
+          v-if="$root.user.isAdmin"
+          index="2"
+        >
+          Admin
+        </el-menu-item>
+        <el-menu-item
+          v-if="$root.user.isOwner"
+          index="3"
+        >
+          Owner
+        </el-menu-item>
+      </el-menu>
+    </div>
+    <el-dialog
+      title="Shipping address"
+      :visible.sync="dialogConsoleVisible"
     >
-      Admin
-    </el-menu-item>
-    <el-menu-item
-      v-if="$root.user.isOwner"
-      index="3"
-    >
-      Owner
-    </el-menu-item>
-  </el-menu>
+      <console></console>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
+import Console from './Console.vue';
+
 export default {
+  components: {
+    Console,
+  },
   data() {
     return {
-      activeIndex: '0'
+      activeIndex: '0',
+      dialogConsoleVisible: false,
     };
   },
   mounted() {
@@ -44,7 +67,7 @@ export default {
       this.activeIndex = key;
       this.$router.push(this.$router.options.routes[key].path)
       // console.log(this.$router.options.routes);
-    }
+    },
   }
 }
 </script>

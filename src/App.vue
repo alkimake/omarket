@@ -7,14 +7,7 @@
       id="main-page"
     >
       <NavBar></NavBar>
-      <el-row :gutter="20">
-        <el-col :span="18">
-          <router-view></router-view>
-        </el-col>
-        <el-col :span="6">
-          <Console></Console>
-        </el-col>
-      </el-row>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -22,13 +15,11 @@
 <script>
 import NavBar from './components/NavBar';
 import Web3 from './components/Web3'
-import Console from './components/Console'
 export default {
   name: 'App',
   components: {
     NavBar,
     Web3,
-    Console
   },
   computed: {
     visible: function () {
