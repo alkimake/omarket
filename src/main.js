@@ -102,7 +102,6 @@ new Vue({
       // this.subscribeLogEvent(OMarketContract, 'AdminAdded')
       // this.subscribeLogEvent(OMarketContract, 'AdminRemoved')
       await this.getUserBasics();
-      this.contractSubscribe();
     } catch (error) {
       this.web3.error = error;
       console.error(error, 'Unable to register web3 instance')
