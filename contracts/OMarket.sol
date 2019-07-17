@@ -5,7 +5,9 @@ import 'openzeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
 import './Store.sol';
 
+/** @title OMarket Core Smart Contract. */
 contract OMarket is Ownable, Pausable {
+
   address[] admins;
   mapping(address => StoreOwner) storeOwners;
   address[] storeOwnersLUT;
@@ -23,11 +25,13 @@ contract OMarket is Ownable, Pausable {
 
   event CreatedNewStore(address owner, address store);
 
+  /** @dev This modifier is for only admin functions */
   modifier onlyAdmin() {
     require(isAdmin(msg.sender), 'Can not verify admin');
     _;
   }
 
+  /** @dev This modifier is for only store owner functions */
   modifier onlyStoreOwner() {
     require(isStoreOwner(msg.sender), 'Can not verify store owner');
     _;
@@ -41,6 +45,9 @@ contract OMarket is Ownable, Pausable {
     bool isActive;
   }
 
+  /** @dev Adds new admin to the contract
+    * @param adminAdress address of admin that is going to be added
+    */
   function addAdmin(address adminAddress)
     public
     onlyOwner
@@ -50,6 +57,9 @@ contract OMarket is Ownable, Pausable {
     emit AdminAdded(adminAddress);
   }
 
+  /** @dev Checks the address is admin or not
+    * @param adminAdress address to be checked
+    */
   function isAdmin(address adminAddress)
     private
     view
@@ -64,6 +74,7 @@ contract OMarket is Ownable, Pausable {
     return false;
   }
 
+  /** @dev Checks if the message sender is admin or not */
   function isAdmin()
     public
     view
@@ -72,6 +83,10 @@ contract OMarket is Ownable, Pausable {
     return isAdmin(msg.sender);
   }
 
+  /** @dev Removes the admin that is already added.
+      @dev if the address is not admin, it reverts the transaction
+    * @param adminAdress address of admin that is going to be removed
+    */
   function removeAdmin(address adminToBeDeleted)
     public
     onlyOwner
@@ -93,6 +108,7 @@ contract OMarket is Ownable, Pausable {
     emit AdminRemoved(adminToBeDeleted);
   }
 
+  /** @dev Lists admin accounts */
   function getAdmins()
     public
     view
@@ -102,6 +118,9 @@ contract OMarket is Ownable, Pausable {
     return admins;
   }
 
+  /** @dev checks if the address is a store owner registered by one of the amdins
+    * @param storeOwnerAddress address that is being checked
+    */
   function isStoreOwner(address storeOwnerAddress)
     private
     view
@@ -116,6 +135,7 @@ contract OMarket is Ownable, Pausable {
     return false;
   }
 
+  /** @dev checks if the message sender is a store owner registered by one of the amdins */
   function isStoreOwner()
     public
     view
@@ -124,7 +144,10 @@ contract OMarket is Ownable, Pausable {
     return isStoreOwner(msg.sender);
   }
 
-
+  /** @dev Adds new Store Owner
+    * @param storeOwnerAddress address that is going to be registered
+    * @param name Store Owner Name
+    */
   function addStoreOwner(address storeOwnerAddress, string memory name)
     public
     onlyAdmin
@@ -136,6 +159,8 @@ contract OMarket is Ownable, Pausable {
     emit StoreOwnerAdded(storeOwnerAddress);
   }
 
+  /** @dev Lists the store owners for admins
+    */
   function getStoreOwners()
     public
     view
@@ -145,6 +170,9 @@ contract OMarket is Ownable, Pausable {
     return storeOwnersLUT;
   }
 
+  /** @dev Retreives store owner informations
+    * @param storeOwnerAddress address of the store owner
+    */
   function readStoreOwner(address storeOwnerAddress)
     public
     view
@@ -159,6 +187,9 @@ contract OMarket is Ownable, Pausable {
     return (addr, name, isActive);
   }
 
+  /** @dev Toggles the status of Store Owner. If its active, it makes passive and vice versa.
+    * @param storeOwnerAddress address of the store owner
+    */
   function toggleStoreOwnerStatus(address storeOwnerAddress)
     public
     onlyAdmin
@@ -171,6 +202,10 @@ contract OMarket is Ownable, Pausable {
 
   //TODO: implement removal of store owner
 
+  /** @dev Creates a new store owner and assigns to store owner
+    * @param name Store Name
+    * @param labels List of the labels seperated by commas
+    */
   function addNewStore(string memory name, string memory labels)
     public
     onlyStoreOwner
@@ -187,6 +222,9 @@ contract OMarket is Ownable, Pausable {
     return address(store);
   }
 
+  /** @dev Lists the stores of the owner
+    * @param storeOwnerAddress address of the store owner
+    */
   function getStoresOfOwner(address storeOwnerAddress)
     private
     view
@@ -202,6 +240,7 @@ contract OMarket is Ownable, Pausable {
     return rStores;
   }
 
+  /** @dev Lists all the stores */
   function getStores()
     public
     view

@@ -4,11 +4,11 @@ Here is the list of todos that should be implemented sometime :D
 
 ## Solidity
 
-* [ ] Write solidity tests
-* [ ] Write comments
+* [x] Write comments
 * [ ] Write test comments
 * [ ] At least one of the contracts implements a circuit breaker / emergency stop pattern.
 * [ ] Implement Removal of Store Owner
+* [ ] Write solidity tests
 * [ ] Full delivery flow
 
 ## WEB

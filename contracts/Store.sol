@@ -32,6 +32,13 @@ contract Store is Ownable {
   event LogBuyProducts(address buyer, uint productId, uint amount);
   event LogGetBalance(address owner, uint balance);
 
+  /** @dev This constructor creates a new Store based on parameters
+    * @dev This store created with the owner by msg.sender and then transfers
+    * ownership to the store owner
+    * @param storeOwner owner address of the store
+    * @param _name store name
+    * @param _labelsSeperatedByCommas label list seperated by commas
+    */
   constructor (address storeOwner, string memory _name, string memory _labelsSeperatedByCommas)
     public
   {
@@ -46,6 +53,13 @@ contract Store is Ownable {
     transferOwnership(storeOwner);
   }
 
+  /** @dev Adds a product to the store
+    * @param name_ Product name
+    * @param desc Product description
+    * @param image ipfs image hash
+    * @param stock current available stock
+    * @param price product price
+    */
   function addProduct(string memory name_, string memory desc, string memory image, uint stock, uint price)
     public
     onlyOwner
@@ -56,6 +70,9 @@ contract Store is Ownable {
     return idGenerator;
   }
 
+  /** @dev reads the product properties
+    * @param productId unique id of product that is going to be read
+    */
   function readProduct(uint productId)
     public
     view
@@ -71,6 +88,10 @@ contract Store is Ownable {
     return(name_, description, imageURL, stock, isAvailable, price);
   }
 
+  /** @dev for buying the product by customer
+    * @param id unique id of product that is going to be bought
+    * @param amount the amount of product wanted to be read
+    */
   function buyProducts(uint id, uint amount)
     public
     payable
@@ -88,6 +109,7 @@ contract Store is Ownable {
     emit LogBuyProducts(msg.sender, id, amount);
   }
 
+  /** @dev Serves the info of Store */
   function getInfo()
     public
     view
@@ -96,6 +118,7 @@ contract Store is Ownable {
     return (name, labels);
   }
 
+  /** @dev Retreives current balance */
   function currentBalance()
     public
     view
@@ -105,6 +128,7 @@ contract Store is Ownable {
     return balance;
   }
 
+  /** @dev Pays the balance to the owner */
   function receiveBalance()
     public
     onlyOwner
