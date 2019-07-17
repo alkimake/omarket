@@ -37,6 +37,9 @@ Check your host and port settings for your ganache.
 
 Change your infura api key and create `.secret` file on root. So you can deploy the contracts to Ropsten network.
 
+This smart contract is already deployed on `ropsten` network and can be seen on `Etherscan`
+<https://ropsten.etherscan.io/tx/0x918440da69059ce18faeb5524179bf33a6fe752c544844d47b390d4e4580f5af>
+
 ### Build Contracts
 
 Build contracts;

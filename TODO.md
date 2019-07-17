@@ -23,7 +23,7 @@ Here is the list of todos that should be implemented sometime :D
 * [ ] If your project does not require a library or an EthPM package, demonstrate how you would do that in a contract called LibraryDemo.sol
 * [x] Project includes a file called design_pattern_desicions.md that adequately describes at least 2 design patterns implemented in the project *
 * [x] Project includes a file called avoiding_common_attacks.md that explains at least 3 common attacks and how the app mitigates user risk. *
-* [ ] Project includes a file called deployed_addresses.txt that describes where the deployed testnet contracts live (which testnet and address) *
+* [x] Project includes a file called deployed_addresses.txt that describes where the deployed testnet contracts live (which testnet and address) *
 
 Consider followings;
 
