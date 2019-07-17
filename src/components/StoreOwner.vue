@@ -153,11 +153,21 @@ export default {
       }));
     },
     async addNewStore() {
-      await this.$root.contractSend('addNewStore', this.newStoreForm.name, this.newStoreForm.labels.join(','));
+      try {
+        await this.$root.contractSend('addNewStore', this.newStoreForm.name, this.newStoreForm.labels.join(','));
+        this.$notify({ title:"Adding New Store", message:"Transaction is sent successfully", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Adding New Store", message:`Failed with error message: ${error}` });
+      }
       this.refreshList();
     },
     async getBalance(store) {
-      await this.$root.storeSend(store.addr, 'receiveBalance');
+      try {
+        await this.$root.storeSend(store.addr, 'receiveBalance');
+        this.$notify({ title:"Receving the Balance", message:"Transaction is sent successfully", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Receving the Balance", message:`Failed with error message: ${error}` });
+      }
     }
   }
 }

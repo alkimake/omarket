@@ -81,7 +81,12 @@ export default {
     async onSubmit() {
       this.loadingText = LOADING_TEXT_PRODUCT;
       this.loading = true;
-      await this.$root.storeSend(this.store.addr, 'addProduct', this.form.name, this.form.desc, this.form.imageUrl, this.form.totalStock, this.form.price);
+      try {
+        await this.$root.storeSend(this.store.addr, 'addProduct', this.form.name, this.form.desc, this.form.imageUrl, this.form.totalStock, this.form.price);
+        this.$notify({ title:"Add Product", message:"Transaction is sent to add new product", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Add Product", message:`Failed with error message: ${error}` });
+      }
       this.loading = false;
     },
     async handleAdd(ev) {

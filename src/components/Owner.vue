@@ -89,12 +89,22 @@ export default {
     },
     async removeAdmin(index, address) {
       this.removingList.push(address);
-      await this.$root.contractSend('removeAdmin', address);
+      try {
+        await this.$root.contractSend('removeAdmin', address);
+        this.$notify({ title:"Remove Admin", message:"Transaction is sent successfully", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Remove Admin", message:`Failed with error message: ${error}` });
+      }
       this.refreshList();
     },
     async addAdmin() {
       //TODO: Validate address
-      await this.$root.contractSend('addAdmin', this.adminForm.address);
+      try {
+        await this.$root.contractSend('addAdmin', this.adminForm.address);
+        this.$notify({ title:"Add Admin", message:"Transaction is sent successfully", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Add Admin", message:`Failed with error message: ${error}` });
+      }
       this.refreshList();
     },
     isRemoving(address) {

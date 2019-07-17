@@ -108,12 +108,22 @@ export default {
       }));
     },
     async toggleStatus(index, address) {
-      await this.$root.contractSend('toggleStoreOwnerStatus', address);
+      try {
+        await this.$root.contractSend('toggleStoreOwnerStatus', address);
+        this.$notify({ title:"Toggle StoreOwner Status", message:"Transaction is sent successfully", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Add Store Owner", message:`Failed with error message: ${error}` });
+      }
       this.refreshList();
     },
     async addStoreOwner() {
       //TODO: Validate address
-      await this.$root.contractSend('addStoreOwner', this.storeOwnerForm.address, this.storeOwnerForm.name);
+      try {
+        await this.$root.contractSend('addStoreOwner', this.storeOwnerForm.address, this.storeOwnerForm.name);
+        this.$notify({ title:"Add Store Owner", message:"Transaction is sent to add new store owner", type: "success" });
+      } catch (error) {
+        this.$notify.error({ title:"Add Store Owner", message:`Failed with error message: ${error}` });
+      }
       this.refreshList();
     }
   }

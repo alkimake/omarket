@@ -120,8 +120,7 @@ new Vue({
       } catch(err) {
         cData.err = err;
         cData.success = false;
-        //FIXME: Throw error to show something is wrong to the user
-        return null;
+        throw err;
       }
     },
     contractCallWithInstance: async function(instance, method, ...args) {
@@ -135,8 +134,7 @@ new Vue({
       } catch(err) {
         cData.err = err;
         cData.success = false;
-        //FIXME: Throw error to show something is wrong to the user
-        return null;
+        throw err;
       }
     },
     contractSendValueWithInstance: async function(instance, method, value, ...args) {
@@ -153,8 +151,7 @@ new Vue({
       } catch(err) {
         cData.err = err;
         cData.success = false;
-        //FIXME: Throw error to show something is wrong to the user
-        return null;
+        throw err;
       }
     },
     contractCall: async function(method, ...args) {
