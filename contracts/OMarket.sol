@@ -46,7 +46,7 @@ contract OMarket is Ownable, Pausable {
   }
 
   /** @dev Adds new admin to the contract
-    * @param adminAdress address of admin that is going to be added
+    * @param adminAddress address of admin that is going to be added
     */
   function addAdmin(address adminAddress)
     public
@@ -58,7 +58,7 @@ contract OMarket is Ownable, Pausable {
   }
 
   /** @dev Checks the address is admin or not
-    * @param adminAdress address to be checked
+    * @param adminAddress address to be checked
     */
   function isAdmin(address adminAddress)
     private
@@ -85,7 +85,7 @@ contract OMarket is Ownable, Pausable {
 
   /** @dev Removes the admin that is already added.
       @dev if the address is not admin, it reverts the transaction
-    * @param adminAdress address of admin that is going to be removed
+    * @param adminToBeDeleted address of admin that is going to be removed
     */
   function removeAdmin(address adminToBeDeleted)
     public
@@ -193,6 +193,7 @@ contract OMarket is Ownable, Pausable {
   function toggleStoreOwnerStatus(address storeOwnerAddress)
     public
     onlyAdmin
+    whenNotPaused
   {
     require(isStoreOwner(storeOwnerAddress), 'Address is not store owner');
     StoreOwner storage seller = storeOwners[storeOwnerAddress];
@@ -209,6 +210,7 @@ contract OMarket is Ownable, Pausable {
   function addNewStore(string memory name, string memory labels)
     public
     onlyStoreOwner
+    whenNotPaused
     returns(address)
   {
     uint nextStoreId = storeIdGenerators[msg.sender]+1;
