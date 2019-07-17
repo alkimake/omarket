@@ -13,7 +13,7 @@ Here is the list of todos that should be implemented sometime :D
 
 ## WEB
 
-* [ ] The app displays the current ethereum account *
+* [x] The app displays the current ethereum account *
 * [ ] Connect `web3` with websocket
 * [ ] Get events and show them on the UI or use for refreshing data on UI
 * [ ] Get Rid of Lodash
