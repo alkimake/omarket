@@ -38,7 +38,7 @@
       </el-menu>
     </div>
     <el-dialog
-      title="Shipping address"
+      title="Console"
       :visible.sync="dialogConsoleVisible"
     >
       <console></console>
