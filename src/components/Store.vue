@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <el-col
-      v-for="(o, index) in products"
+      v-for="(o) in products"
       :key="o.store+o.id"
       :xs="24"
       :sm="3"
@@ -50,6 +50,9 @@
             <p class="desc">
               {{ o.desc }}
             </p>
+            <p class="stock">
+              Available: {{ o.stock }}
+            </p>
           </div>
         </div>
       </el-card>
@@ -65,6 +68,10 @@
 .desc {
   font-size: 13px;
   color: #999;
+}
+.stock {
+  font-size: 13px;
+  color: #993;
 }
 .price {
   font-size: 13px;
