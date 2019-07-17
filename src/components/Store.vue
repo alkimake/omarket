@@ -109,7 +109,7 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      stores: {},
+      stores: [],
       products: [],
     };
   },
@@ -120,6 +120,9 @@ export default {
     async getStoreList() {
       this.products = [];
       this.stores = await this.$root.contractCall('getStores');
+      if (this.stores == null) {
+        this.stores = [];
+      }
       for (const store of this.stores) { this.getProducts(store); }
     },
     async getProducts(store) {
