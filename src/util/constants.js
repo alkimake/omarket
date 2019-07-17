@@ -8,5 +8,3 @@ export const NETWORKS = {
   '5777': 'Ganache Blockchain',
   '666': 'Daniel Private Blockchain' // This is a test private blockchain. You can change it to your own private blockchain if you have one.
 }
-
-export const APPROVED_NETWORK_ID = '5777'

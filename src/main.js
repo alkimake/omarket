@@ -9,12 +9,12 @@ import StoreContract from "./contracts/Store.json";
 import getWeb3 from './util/web3/getWeb3';
 import { blockie } from './util/icon';
 
-import { APPROVED_NETWORK_ID } from './util/constants'
-
 Vue.config.devtools = true
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
+
+const APPROVED_NETWORK_ID = process.env.APPROVED_NETWORK_ID || '5777';
 
 const connectToNetwork = async () => {
   const {web3, fallback} = await getWeb3({fallback: {type:'http', url:'http://127.0.0.1:8545'}});
@@ -110,7 +110,6 @@ new Vue({
   },
   methods: {
     contractSendWithInstance: async function(instance, method, ...args) {
-      //FIXME: Wait calling methods until web3 is ready
       const cData = { args, method, action: 'send', success:false }
       this.consoleData.push(cData);
       try {
