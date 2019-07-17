@@ -16,7 +16,6 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 
-
 const connectToNetwork = async () => {
   const {web3, fallback} = await getWeb3({fallback: {type:'http', url:'http://127.0.0.1:8545'}});
 
@@ -28,9 +27,13 @@ const connectToNetwork = async () => {
   const hasInjectedWeb3 = await web3.eth.net.isListening();
 
   const deployedNetwork = OMarketContract.networks[networkId];
+  let depAddr =  process.env.DEPLOYED_ADDRESS;
+  if (!depAddr) {
+    depAddr = deployedNetwork && deployedNetwork.address;
+  }
   const instance = new web3.eth.Contract(
     OMarketContract.abi,
-    deployedNetwork && deployedNetwork.address,
+    depAddr,
   );
   return { web3: web3 ? web3 : fallback, accounts, networkId, coinbase, hasInjectedWeb3, instance };
 }
