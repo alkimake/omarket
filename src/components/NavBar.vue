@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="header">
+      Current address is; <b>{{ coinbase }}</b>
+    </div>
     <el-button
       style="float: right;"
       type="primary"
@@ -59,6 +62,11 @@ export default {
       dialogConsoleVisible: false,
     };
   },
+  computed: {
+    coinbase() {
+      return this.$root.web3.coinbase;
+    }
+  },
   mounted() {
     this.activeIndex = this.$router.options.routes.findIndex(r => r.path === this.$router.currentRoute.path).toString();
   },
@@ -71,3 +79,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.header {
+  font-size: 12px;
+  color: cornflowerblue
+}
+</style>
