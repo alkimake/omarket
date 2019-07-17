@@ -2,10 +2,12 @@ pragma solidity >=0.4.21 <0.6.0;
 pragma experimental ABIEncoderV2;
 
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 import { strings } from "./lib/strings.sol";
 
 contract Store is Ownable {
     using strings for *;
+    using SafeMath for *;
 
   string[] public labels;
   string public name;
@@ -101,7 +103,7 @@ contract Store is Ownable {
     uint _price = amount*myProduct.price;
     require(msg.value >= _price, 'Insufficiant fund to purchase');
     require(amount <= myProduct.totalStock - myProduct.sales, 'There is not enough ticket to purchase');
-    myProduct.buyers[msg.sender] += amount;
+    myProduct.buyers[msg.sender] = SafeMath.add(myProduct.buyers[msg.sender], amount);
     myProduct.sales += amount;
     balance += _price;
     uint refund = msg.value - _price;
