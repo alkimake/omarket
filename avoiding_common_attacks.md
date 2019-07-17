@@ -40,7 +40,7 @@ Open-Zeppelin SafeMath can be found at; <https://github.com/OpenZeppelin/openzep
 This attack is well documented on
 <https://consensys.github.io/smart-contract-best-practices/known_attacks/#integer-overflow-and-underflow>
 
-# DoS with (Unexpected) revert
+## DoS with (Unexpected) revert
 
 To prevent this it is avoided combining multiple transfer() calls in a single transaction on `Store` contract.
 
