@@ -5,6 +5,7 @@
       <el-col :span="18">
         <h2>Products</h2>
         <el-table
+          v-loading="loading"
           :data="productList"
           style="width: 100%"
         >
@@ -44,12 +45,16 @@
         </el-table>
       </el-col>
       <el-col :span="6">
-        <add-product :store="store"></add-product>
+        <add-product
+          :store="store"
+          :product-added-callback="storeNeedsRefresh"
+        ></add-product>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
+import { delay } from '../util';
 import AddProduct from './AddProduct.vue';
 export default {
   components: {
@@ -71,13 +76,17 @@ export default {
       },
       deep: true,
       immediate: true,
+      loading: false,
     },
   },
   methods: {
-    async refreshList() {
+    async refreshList(wait=0, timeout=1000) {
+      this.loading = true;
+      if (wait) {
+        await delay(timeout);
+      }
       const list = [];
       const lastId = await this.$root.storeCall(this.store.addr, 'idGenerator');
-      console.log('id', lastId);
       for(let i = 0; i < lastId; i++) {
         const item = await this.$root.storeCall(this.store.addr, 'readProduct', i);
         list[i] = {
@@ -90,6 +99,10 @@ export default {
         }
       }
       this.productList = list;
+      this.loading = false;
+    },
+    storeNeedsRefresh() {
+      this.refreshList(true);
     }
   }
 };

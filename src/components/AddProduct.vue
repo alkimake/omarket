@@ -56,7 +56,8 @@ const LOADING_TEXT_UPLOAD = 'Uploading Image';
 const LOADING_TEXT_PRODUCT = 'Creating New Product';
 export default {
   props: {
-    store: Object
+    store: Object,
+    productAddedCallback: Function,
   },
   data() {
     return {
@@ -88,21 +89,9 @@ export default {
         this.$notify.error({ title:"Add Product", message:`Failed with error message: ${error}` });
       }
       this.loading = false;
+      this.productAddedCallback();
     },
     async handleAdd(ev) {
-
-      // const isJPG = file.type === "image/jpeg";
-      // const isPNG = file.type === "image/png";
-      // const isLt2M = file.size / 1024 / 1024 < 2;
-
-      // if (!isJPG && !isPNG) {
-      //   this.$message.error("Product picture must be JPG or PNG format!");
-      //   return;
-      // }
-      // if (!isLt2M) {
-      //   this.$message.error("Product picture size can not exceed 2MB!");
-      //   return;
-      // }
       const file = ev.target.files[0];
       const isJPG = file.type === "image/jpeg";
       const isPNG = file.type === "image/png";

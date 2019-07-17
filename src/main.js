@@ -99,6 +99,7 @@ new Vue({
       // this.subscribeLogEvent(OMarketContract, 'AdminAdded')
       // this.subscribeLogEvent(OMarketContract, 'AdminRemoved')
       await this.getUserBasics();
+      this.contractSubscribe();
     } catch (error) {
       this.web3.error = error;
       console.error(error, 'Unable to register web3 instance')
@@ -181,13 +182,6 @@ new Vue({
     contractSubscribe: async function(eventName, callback) {
       //FIXME: Connect web3 via websocket api
       //TODO: Research how metamask ws provider
-      return this.web3.handle.subscribe(eventName, async (error, event) => {
-        if (error) {
-          console.error(`Error occured on event ${eventName}; ${error}`);
-          return;
-        }
-        callback(eventName, event);
-      });
     },
     getUserBasics: async function() {
       try {

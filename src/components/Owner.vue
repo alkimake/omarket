@@ -21,6 +21,7 @@
       </el-form-item>
     </el-form>
     <el-table
+      v-loading="loading"
       :data="adminList"
       style="width: 100%"
     >
@@ -65,6 +66,7 @@
   </div>
 </template>
 <script>
+import { delay } from "../util";
 export default {
   data() {
     return {
@@ -72,7 +74,8 @@ export default {
         address: ''
       },
       adminList_: [],
-      removingList: []
+      removingList: [],
+      loading: false,
     }
   },
   computed: {
@@ -84,8 +87,13 @@ export default {
     this.refreshList();
   },
   methods: {
-    async refreshList() {
+    async refreshList(wait=0, timeout=1000) {
+      this.loading = true;
+      if (wait) {
+        await delay(timeout);
+      }
       this.adminList_ = await this.$root.contractCall('getAdmins');
+      this.loading = false;
     },
     async removeAdmin(index, address) {
       this.removingList.push(address);
@@ -95,7 +103,8 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Remove Admin", message:`Failed with error message: ${error}` });
       }
-      this.refreshList();
+      this.refreshList(true);
+      this.removingList = [];
     },
     async addAdmin() {
       //TODO: Validate address
@@ -105,7 +114,7 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Add Admin", message:`Failed with error message: ${error}` });
       }
-      this.refreshList();
+      this.refreshList(true);
     },
     isRemoving(address) {
       const removingIndex = this.removingList.findIndex(a => address===a);

@@ -27,6 +27,7 @@
       </el-form-item>
     </el-form>
     <el-table
+      v-loading="loading"
       :data="storeOwnerList"
       style="width: 100%"
     >
@@ -85,6 +86,7 @@
   </div>
 </template>
 <script>
+import { delay } from '../util';
 export default {
   data() {
     return {
@@ -92,20 +94,26 @@ export default {
         address: '',
         name: '',
       },
-      storeOwnerList: []
+      storeOwnerList: [],
+      loading: false,
     }
   },
   mounted: function() {
     this.refreshList();
   },
   methods: {
-    async refreshList() {
+    async refreshList(wait=0, timeout=1000) {
+      this.loading = true;
+      if (wait) {
+        await delay(timeout);
+      }
       const list = await this.$root.contractCall('getStoreOwners');
       this.storeOwnerList = await Promise.all(list.map(async addr => {
         const result = await this.$root.contractCall('readStoreOwner', addr);
         const owner = { addr: result['0'], name: result['1'], isActive: result['2']};
         return owner;
       }));
+      this.loading = false;
     },
     async toggleStatus(index, address) {
       try {
@@ -114,7 +122,7 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Add Store Owner", message:`Failed with error message: ${error}` });
       }
-      this.refreshList();
+      this.refreshList(true);
     },
     async addStoreOwner() {
       //TODO: Validate address
@@ -124,7 +132,7 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Add Store Owner", message:`Failed with error message: ${error}` });
       }
-      this.refreshList();
+      this.refreshList(true);
     }
   }
 }

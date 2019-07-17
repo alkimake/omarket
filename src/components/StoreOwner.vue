@@ -38,6 +38,7 @@
     </el-form>
     <el-table
       ref="storelistTable"
+      v-loading="loading"
       :data="storeList"
       highlight-current-row
       style="width: 100%"
@@ -94,6 +95,7 @@
       </el-table-column>
       <el-table-column
         label="Actions"
+        width="150"
       >
         <template slot-scope="scope">
           <el-button
@@ -112,6 +114,7 @@
   </div>
 </template>
 <script>
+import { delay } from '../util';
 import StoreDetail from './StoreDetail.vue';
 export default {
   components: {
@@ -131,19 +134,21 @@ export default {
       },
       storeList: [],
       currentRow: null,
+      loading: false,
     }
   },
   mounted: async function() {
     await this.refreshList();
-    if (this.storeList.length > 0) {
-      this.$refs.storelistTable.setCurrentRow(this.storeList[0]);
-    }
   },
   methods: {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-    async refreshList() {
+    async refreshList(wait=0, timeout=1000) {
+      this.loading = true;
+      if (wait) {
+        await delay(timeout);
+      }
       const list = await this.$root.contractCall('getStores');
       this.storeList = await Promise.all(list.map(async addr => {
         const info = await this.$root.storeCall(addr, 'getInfo');
@@ -151,6 +156,10 @@ export default {
         store.balance = await this.$root.storeCall(addr, 'currentBalance');
         return store;
       }));
+      this.loading = false;
+      if (this.storeList.length > 0) {
+        this.$refs.storelistTable.setCurrentRow(this.storeList[0]);
+      }
     },
     async addNewStore() {
       try {
@@ -159,7 +168,7 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Adding New Store", message:`Failed with error message: ${error}` });
       }
-      this.refreshList();
+      this.refreshList(true);
     },
     async getBalance(store) {
       try {
@@ -168,6 +177,7 @@ export default {
       } catch (error) {
         this.$notify.error({ title:"Receving the Balance", message:`Failed with error message: ${error}` });
       }
+      this.refreshList(true);
     }
   }
 }
