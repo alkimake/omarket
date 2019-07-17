@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="header">
-      Current address is; <b>{{ coinbase }}</b>
+      <el-button
+        style="float: right;font-size:12px;"
+        type="text"
+        @click="dialogConsoleVisible = true"
+      >
+        Console
+      </el-button>
+      <p>Current address is; <b>{{ coinbase }}</b></p>
     </div>
-    <el-button
-      style="float: right;"
-      type="primary"
-      @click="dialogConsoleVisible = true"
-    >
-      Console
-    </el-button>
-    <div style="margin-right:100px;">
+    <div>
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
