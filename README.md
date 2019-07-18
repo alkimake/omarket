@@ -31,6 +31,50 @@ Make alterations in `truffle-config.js`. Currently `truffle-config.js` supports 
 
 ### Ganache Network
 
+For development, you need to install and run `ganache-cli` to have a local test network
+
+```sh
+$ yarn global add ganache-cli
+$ ganache-cli
+Ganache CLI v6.4.5 (ganache-core: 2.5.7)
+Available Accounts
+==================
+(0) 0xaeebc0685e3a6d7a08e2a9ff855a4916cd586f9d (~100 ETH)
+(1) 0x4be3f7863ad7adda47b2657bffa8d76a3443a1a6 (~100 ETH)
+(2) 0x3254d76535d87923b339e7059394cdcb42d754d2 (~100 ETH)
+(3) 0x28ee0be50f9909f092ccf11c627ae22b3bed2dc3 (~100 ETH)
+(4) 0x855fe8f0d6ca7636eae32345c46b5daf6a3dc955 (~100 ETH)
+(5) 0x3065c52cb069858f1ed90cb7efd83e7dc07393c3 (~100 ETH)
+(6) 0x43dd7a550cab201fa2e7b5ef3a2fb167c9d03c3f (~100 ETH)
+(7) 0x2f3cfe1a5dc81ad7d44bf7a30fbad3da3c325062 (~100 ETH)
+(8) 0xb4ebf2991a3fa7aa9124145259d9acda1d8d67a8 (~100 ETH)
+(9) 0xbda63d4e7168a62a98426b16e055ed813c6f4f56 (~100 ETH)
+Private Keys
+==================
+(0) 0xf103e25388fd1bb55c037f0aa74d9db429839be718ea99aa26736d47223ac743
+(1) 0xc2f58f09d31650cd853c24c40d78e43e82117da32ea495b3c9c7c91baeaadf62
+(2) 0x0f70f21672c592abc42b40d070fb429361a08916d71d49e8fdbef1925a86a4a8
+(3) 0x1e7f3c8677ae7322c622f95357eed6350a9e1eaebf7ac9b888ae178ed0658fef
+(4) 0x80b5e16b030a810624c629eab6aad6fc25106048e0fe136e014df970ccfbd22b
+(5) 0xf0d4d510a2d4c115e25db8fc8a24bc07bfabe67354a9f8913cafcdc0c5faaea5
+(6) 0xaea3c7f264d242b93d13b3c4b1122f6cd639bcf9aac2dabeba24d707ea264579
+(7) 0x1fa7f80bd55d9c3503cea1657f15b90a62659b39c4aa7d9e3d3cf398867e69db
+(8) 0xd3bf2b49ef54a7e2013aca5329a9302c4406887154465740b3b4c6087883c351
+(9) 0x6569d60e6f08933b0524661d828ccfac8ced1a2e0efdcbb2b13bbc6391bb1de1
+HD Wallet
+==================
+Mnemonic:      ill cotton toilet bounce frost barely fee example famous final vague captain
+Base HD Path:  m/44'/60'/0'/0/{account_index}
+Gas Price
+==================
+20000000000
+Gas Limit
+==================
+6721975
+Listening on 127.0.0.1:8545
+```
+
+Use the mnemonics to get accounts on `metamask`
 Check your host and port settings for your ganache.
 
 ### Ropsten
