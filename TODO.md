@@ -7,6 +7,7 @@ Here is the list of todos that should be implemented sometime :D
 * [x] Write comments
 * [x] At least one of the contracts implements a circuit breaker / emergency stop pattern.
 
+* [ ] Implement ERC20 Tokens
 * [ ] Implement Removal of Store Owner
 * [ ] Write solidity tests
 * [ ] Full delivery flow
