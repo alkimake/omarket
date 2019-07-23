@@ -150,9 +150,11 @@ export default {
       console.log(product.store, 'buyProducts', product.price, product.id, 1);
       try {
         await this.$root.storeSendWithValue(product.store, 'buyProducts', product.price, product.id, 1);
-        this.$notify({ title:"Buying Product", message:"Transaction is sent successfully", type: "success" });
+        this.$alert(`${product.name} is bought successfully. Store owner will be in contact with you`, 'Bought', { type: "success", confirmButtonText: 'OK' });
+        // this.$notify({ title:"Buying Product", message:"Transaction is sent successfully", type: "success" });
       } catch (error) {
-        this.$notify.error({ title:"Buying Product", message:`Failed with error message: ${error}` });
+        this.$alert(`Failed with error message: ${error}`, 'Error', { type: "error", confirmButtonText: 'OK' });
+        // this.$notify.error({ title:"Buying Product", message:`Failed with error message: ${error}` });
       }
     }
   }
