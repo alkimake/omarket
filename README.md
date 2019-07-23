@@ -247,7 +247,7 @@ Done in 25.59s.
 
 I have tried some of the ethereum patterns and techinuques to learn in depth. All examples are in their git branches.
 
-- EthPM -> [ethpm](/alkimake/omarket/tree/ethpm)
+- EthPM -> [ethpm](https://github.com/alkimake/omarket/tree/ethpm)
 
 ## Contribution
 
