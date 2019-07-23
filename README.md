@@ -248,6 +248,7 @@ Done in 25.59s.
 I have tried some of the ethereum patterns and techinuques to learn in depth. All examples are in their git branches.
 
 - EthPM -> [ethpm](https://github.com/alkimake/omarket/tree/ethpm)
+  - There is a `LibraryDemo.sol` file in the `contracts` folder which demonstrates ExampleCoin and zeppelins ethpm package with `SafeMath` and `ERC20` token
 
 ## Contribution
 
