@@ -135,6 +135,11 @@ Currently supports following Networks;
 
 Now you can browse `http://localhost:1234` in your browser.
 
+
+## Upgrade
+
+Upgrading the contract guide can be found at [Upgrade](upgrade.md) doc. Currently Owned Proxy Pattern is used. Upgrade is possible with more methods and patterns such as **upgradeable external storage** pattern.
+
 ## TEST
 
 You need to run `ganache` to run tests
@@ -237,6 +242,12 @@ pragma experimental ABIEncoderV2;
 
 Done in 25.59s.
 ```
+
+## Extras
+
+I have tried some of the ethereum patterns and techinuques to learn in depth. All examples are in their git branches.
+
+- EthPM -> [ethpm](/alkimake/omarket/tree/ethpm)
 
 ## Contribution
 
