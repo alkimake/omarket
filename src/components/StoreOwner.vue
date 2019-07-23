@@ -100,6 +100,7 @@
         <template slot-scope="scope">
           <el-button
             type="primary"
+            :disabled="scope.row.balance == 0"
             @click="getBalance(scope.row)"
           >
             Receive
