@@ -66,6 +66,8 @@ contract('OMarket', function (accounts) {
       await instance.addAdmin(adminAccount, {from: deployAccount});
       const adminIsAdmin = await instance.isAdmin({from: adminAccount});
       assert.equal(adminIsAdmin, true);
+      const sellerIsAdmin = await instance.isAdmin({from: sellerAccount});
+      assert.equal(sellerIsAdmin, false);
     });
 
     describe("removeAdmin()", async () => {
