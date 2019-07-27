@@ -31,6 +31,7 @@ const connectToNetwork = async () => {
   if (!depAddr) {
     depAddr = deployedNetwork && deployedNetwork.address;
   }
+  console.log("Deployed contract address is", depAddr);
   const instance = new web3.eth.Contract(
     OMarketContract.abi,
     depAddr,
