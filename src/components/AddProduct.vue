@@ -22,7 +22,7 @@
         <el-input-number
           v-model="form.price"
           :min="1"
-        ></el-input-number> wei
+        ></el-input-number> ether
       </el-form-item>
       <el-form-item label="Stock">
         <el-input-number
@@ -49,6 +49,7 @@
 </template>
 <script>
 import { read } from 'fs';
+import web3 from 'web3';
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001,protocol: 'https' });
 
@@ -83,7 +84,7 @@ export default {
       this.loadingText = LOADING_TEXT_PRODUCT;
       this.loading = true;
       try {
-        await this.$root.storeSend(this.store.addr, 'addProduct', this.form.name, this.form.desc, this.form.imageUrl, this.form.totalStock, this.form.price);
+        await this.$root.storeSend(this.store.addr, 'addProduct', this.form.name, this.form.desc, this.form.imageUrl, this.form.totalStock, web3.utils.toWei(this.form.price.toString()));
         this.$notify({ title:"Add Product", message:"Transaction is sent to add new product", type: "success" });
       } catch (error) {
         this.$notify.error({ title:"Add Product", message:`Failed with error message: ${error}` });
