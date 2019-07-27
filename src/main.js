@@ -130,7 +130,7 @@ new Vue({
       const cData = { args, method, action: 'call', success:false }
       this.consoleData.push(cData);
       try {
-        const result = await instance[method](...args).call();
+        const result = await instance[method](...args).call({from:this.web3.coinbase});
         cData.result = result;
         cData.success = true;
         return result;

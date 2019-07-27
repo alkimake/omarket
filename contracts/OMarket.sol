@@ -29,7 +29,7 @@ contract OMarket is Ownable, Pausable {
 
   /** @dev This modifier is for only admin functions */
   modifier onlyAdmin() {
-    require(isAddressAdmin(msg.sender), 'Can not verify admin');
+    require(admins[msg.sender], 'Can not verify admin');
     _;
   }
 
@@ -61,17 +61,6 @@ contract OMarket is Ownable, Pausable {
     emit AdminAdded(adminAddress);
   }
 
-  /** @dev Checks the address is admin or not
-    * @param adminAddress address to be checked
-    */
-  function isAddressAdmin(address adminAddress)
-    internal
-    view
-    returns(bool)
-  {
-    return admins[adminAddress];
-  }
-
   /** @dev Checks if the message sender is admin or not */
   function isAdmin()
     public
@@ -89,7 +78,7 @@ contract OMarket is Ownable, Pausable {
     public
     onlyOwner
   {
-    require(isAddressAdmin(adminToBeDeleted), "The address is not admin");
+    require(admins[adminToBeDeleted], "The address is not admin");
     admins[adminToBeDeleted] = false;
     delete admins[adminToBeDeleted];
 
@@ -166,7 +155,6 @@ contract OMarket is Ownable, Pausable {
   function getStoreOwners()
     public
     view
-    onlyAdmin
     returns(address[] memory)
   {
     return storeOwnersLUT;
@@ -178,7 +166,6 @@ contract OMarket is Ownable, Pausable {
   function readStoreOwner(address storeOwnerAddress)
     public
     view
-    onlyAdmin
     returns(address, string memory, bool)
   {
     // return storeOwners[storeOwnerAddress];
