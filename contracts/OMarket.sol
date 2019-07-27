@@ -217,13 +217,13 @@ contract OMarket is Ownable, Pausable {
     * @param storeOwnerAddress address of the store owner
     */
   function getStoresOfOwner(address storeOwnerAddress)
-    private
+    public
     view
     returns(address[] memory)
   {
     mapping(uint => address) storage storesOfOwner = stores[storeOwnerAddress];
     require(storesOfOwner[1] != address(0), 'Theres is no store for this owner');
-    uint count = storeIdGenerators[msg.sender];
+    uint count = storeIdGenerators[storeOwnerAddress];
     address[] memory rStores = new address[](count);
     for (uint index = 1; index <= count; index++) {
       rStores[index-1] = storesOfOwner[index];
