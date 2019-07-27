@@ -10,6 +10,7 @@
     "ethereum-blockies": "^0.1.1",
     "http2": "^3.3.7",
     "ipfs-api": "^26.1.2",
+    "truffle": "^5.0.29",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3",
     "vue-router": "^3.0.6",

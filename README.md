@@ -16,6 +16,12 @@ Currently i am continuening to discover Dapp environment. Also there is a [TODO]
 
 ## Installation
 
+We need `npx` for running nodejs custom commands
+
+```sh
+yarn global add npx
+```
+
 Migrate this repository and install dependencies;
 
 ```sh
