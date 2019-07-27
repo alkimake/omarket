@@ -8,7 +8,8 @@ import './Store.sol';
 /** @title OMarket Core Smart Contract. */
 contract OMarket is Ownable, Pausable {
 
-  address[] admins;
+  mapping(address => bool) admins;
+  address[] adminLUT;
   mapping(address => StoreOwner) storeOwners;
   address[] storeOwnersLUT;
   uint STORE_CAP = 5;
@@ -22,12 +23,13 @@ contract OMarket is Ownable, Pausable {
   event StoreOwnerRemoved(address storeOwnerAddress);
   event LogStoreOwner(address, string, bool);
   event LogStoreOwnerStatusChanged(address storeOwnerAddress, bool isActive);
+  event LogCheckedAdmin(address from, bool result);
 
   event CreatedNewStore(address owner, address store);
 
   /** @dev This modifier is for only admin functions */
   modifier onlyAdmin() {
-    require(isAdmin(msg.sender), 'Can not verify admin');
+    require(isAddressAdmin(msg.sender), 'Can not verify admin');
     _;
   }
 
@@ -53,25 +55,21 @@ contract OMarket is Ownable, Pausable {
     onlyOwner
     whenNotPaused
   {
-    admins.push(adminAddress);
+    require(!admins[adminAddress], "This address is already an admin");
+    admins[adminAddress] = true;
+    adminLUT.push(adminAddress);
     emit AdminAdded(adminAddress);
   }
 
   /** @dev Checks the address is admin or not
     * @param adminAddress address to be checked
     */
-  function isAdmin(address adminAddress)
-    private
+  function isAddressAdmin(address adminAddress)
+    internal
     view
     returns(bool)
   {
-    uint adminLength = admins.length;
-    for (uint i = 0; i < adminLength; i++) {
-      if (admins[i] == adminAddress) {
-        return true;
-      }
-    }
-    return false;
+    return admins[adminAddress];
   }
 
   /** @dev Checks if the message sender is admin or not */
@@ -80,7 +78,7 @@ contract OMarket is Ownable, Pausable {
     view
     returns(bool)
   {
-    return isAdmin(msg.sender);
+    return admins[msg.sender];
   }
 
   /** @dev Removes the admin that is already added.
@@ -91,20 +89,24 @@ contract OMarket is Ownable, Pausable {
     public
     onlyOwner
   {
-    require(isAdmin(adminToBeDeleted), "The address is not admin");
+    require(isAddressAdmin(adminToBeDeleted), "The address is not admin");
+    admins[adminToBeDeleted] = false;
+    delete admins[adminToBeDeleted];
+
     uint indexToBeDeleted;
-    uint adminLength = admins.length;
+    uint adminLength = adminLUT.length;
     for (uint i = 0; i < adminLength; i++) {
-      if (admins[i] == adminToBeDeleted) {
+      if (adminLUT[i] == adminToBeDeleted) {
         indexToBeDeleted = i;
         break;
       }
     }
     if (indexToBeDeleted < adminLength-1 ) {
-      admins[indexToBeDeleted] = admins[adminLength - 1];
+      adminLUT[indexToBeDeleted] = adminLUT[adminLength - 1];
     }
-    delete admins[adminLength - 1];
-    admins.length--;
+    delete adminLUT[adminLength - 1];
+    adminLUT.length--;
+
     emit AdminRemoved(adminToBeDeleted);
   }
 
@@ -115,7 +117,7 @@ contract OMarket is Ownable, Pausable {
     onlyOwner
     returns(address[] memory)
   {
-    return admins;
+    return adminLUT;
   }
 
   /** @dev checks if the address is a store owner registered by one of the amdins
