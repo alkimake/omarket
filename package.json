@@ -37,9 +37,9 @@
     "test:sol": "truffle test",
     "dev": "npx parcel index.html",
     "watch": "npx parcel watch index.html",
-    "watch:contracts": "npx truffle watch --contracts_build_directory=./src/contracts",
-    "migrate:contracts": "npx truffle migrate --contracts_build_directory=./src/contracts",
-    "build:contracts": "npx truffle build --contracts_build_directory=./src/contracts",
+    "watch:contracts": "npx truffle watch",
+    "migrate:contracts": "npx truffle migrate",
+    "build:contracts": "npx truffle build",
     "build:client": "npx parcel build index.html"
   },
   "repository": {
