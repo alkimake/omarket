@@ -112,8 +112,8 @@ This command migrates the contracts into `development` network (which is served 
 
 **INFO**: The images for products are kept on ipfs by uploading and receiving `infura` ipfs gateway. There is nothing to change on this.
 
-**INFO**: The build version of this client can be found on IPFS Hash: `QmUS9CYZnDD6fb46XDkk31UPreMyPJw2cn4wzKA7WPpWoM`
-Web client will work via ipfs gateways. eg. <https://ipfs.io/ipfs/QmUS9CYZnDD6fb46XDkk31UPreMyPJw2cn4wzKA7WPpWoM>
+**INFO**: The build version of this client can be found on IPFS Hash: `QmPvdCGfRZ9U49iAboMaZ1oGux8mco2JQJ9f4iFjbBzjru`
+Web client will work via ipfs gateways. eg. <https://ipfs.io/ipfs/QmPvdCGfRZ9U49iAboMaZ1oGux8mco2JQJ9f4iFjbBzjru>
 
 **BUILD** To build and serve the webclient on ipfs you can use following build command;
 
