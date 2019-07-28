@@ -192,6 +192,7 @@ export default {
       console.log(product.store, 'buyProducts', product.price, product.id, 1);
       try {
         await this.$root.storeSendWithValue(product.store, 'buyProducts', product.price, product.id, 1);
+        product.stock -= 1;
         this.$alert(`${product.name} is bought successfully. Store owner will be in contact with you`, 'Bought', { type: "success", confirmButtonText: 'OK' });
         // this.$notify({ title:"Buying Product", message:"Transaction is sent successfully", type: "success" });
       } catch (error) {
