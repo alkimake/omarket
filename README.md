@@ -1,5 +1,7 @@
 # oMarket
 
+[![Build Status](https://travis-ci.org/alkimake/omarket.svg?branch=master)](https://travis-ci.org/alkimake/omarket)
+
 Open Market Dapp solution written in solidity smart contracts with web client.
 
 This application is an Open Market that consists 3 roles;
