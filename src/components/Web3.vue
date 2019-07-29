@@ -27,7 +27,7 @@
           show-icon
           :closable="false"
         >
-          Connected to the {{ approvedNetworkName }}.
+          Connected to the {{ connectedNetworkName }}.
         </el-alert>
         <el-alert
           v-if="hasInjectedWeb3 && !isConnectedToApprovedNetwork"
@@ -35,7 +35,7 @@
           show-icon
           :closable="false"
         >
-          But you are not connected to our network on the blockchain [{{ approvedNetworkName }}].<br>
+          But you are not connected to our network on the blockchain [{{ connectedNetworkName }}].<br>
           Connect to the <b>{{ approvedNetworkName }}</b>.
         </el-alert>
         <el-alert
@@ -77,9 +77,12 @@ export default {
       return this.$root.web3.isConnectedToApprovedNetwork
     },
     approvedNetworkName () {
+      const networkId = this.$root.web3.approvedNetworkId
+      return NETWORKS[networkId]
+    },
+    connectedNetworkName () {
       const networkId = this.$root.web3.networkId
-      const approvedNetworkId = APPROVED_NETWORK_ID || networkId
-      return NETWORKS[approvedNetworkId]
+      return NETWORKS[networkId]
     },
   },
   methods: {

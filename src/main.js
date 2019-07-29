@@ -95,6 +95,7 @@ new Vue({
       this.web3.isInjected = web3.hasInjectedWeb3;
       this.web3.networkId = web3.networkId;
       this.web3.instance = web3.instance;
+      this.web3.approvedNetworkId = APPROVED_NETWORK_ID;
       this.web3.isConnectedToApprovedNetwork = APPROVED_NETWORK_ID == web3.networkId;
 
       if (this.web3.isInjected && this.web3.isConnectedToApprovedNetwork && this.web3.coinbase) {
