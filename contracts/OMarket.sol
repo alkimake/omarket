@@ -5,7 +5,9 @@ import 'openzeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
 import './Store.sol';
 
-/** @title OMarket Core Smart Contract. */
+/** @title OMarket Core Smart Contract.
+    @author Alkim Gozen <alkimake@gmail.com>
+  */
 contract OMarket is Ownable, Pausable {
 
   mapping(address => bool) admins;

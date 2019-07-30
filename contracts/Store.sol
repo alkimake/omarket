@@ -5,6 +5,9 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 import { strings } from "./lib/strings.sol";
 
+/** @title Store is a store contract to keep seller process
+    @author Alkim Gozen <alkimake@gmail.com>
+ */
 contract Store is Ownable {
     using strings for *;
     using SafeMath for *;
