@@ -39,11 +39,11 @@ Make alterations in `truffle-config.js`. Currently `truffle-config.js` supports 
 
 ### Ganache Network
 
-For development, you need to install and run `ganache-cli` to have a local test network
+For development, you need to install and run `ganache-cli` to have a local test network. We add `-i 5777` to make sure the ganache network id is proper.
 
 ```sh
 $ yarn global add ganache-cli
-$ ganache-cli
+$ ganache-cli -i 5777
 Ganache CLI v6.4.5 (ganache-core: 2.5.7)
 Available Accounts
 ==================
